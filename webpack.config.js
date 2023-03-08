@@ -22,7 +22,7 @@ const path = require('path');
         use: ["style-loader", "css-loader"],
       },
       {
-        test: /\.(png|svg|jpg|jpeg|gif)$/i,
+        test: /\.(png|jpg|jpeg|gif)$/i,
         type: 'asset/resource',
       },
       {
@@ -32,6 +32,10 @@ const path = require('path');
       {
         test: /\.(csv|tsv)$/i,
         use: ['csv-loader'],
+      },
+      { 
+        test: /\.svg$/, 
+        use: 'svg-inline-loader',
       },
       {
         test: /\.xml$/i,

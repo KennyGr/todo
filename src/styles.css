@@ -4,8 +4,29 @@ html, body {
   background: rgb(80, 80, 80);
 }
 
-.nice-class {
+h1, h2, h3, h4, h5, h6, p, li {
     font-family: Arial, Helvetica, sans-serif;
+}
+
+a:link { 
+    text-decoration: none; 
+}
+
+a:visited { 
+    text-decoration: none; 
+}
+
+
+a:hover { 
+    text-decoration: none; 
+}
+
+
+a:active { 
+    text-decoration: none; 
+}
+
+.nice-class {
     color: rgb(255, 255, 255);
     font-size: 22px;
     margin: 0 40px;
@@ -38,24 +59,47 @@ html, body {
 
 .sidebar-items {
     list-style: none;
-    margin-left: 40px;
     margin-top: 40px;
-    color:aqua;
+    color:rgb(255, 255, 255);
 }
 
-.sidebar-items > a {
-    text-decoration: none;
+.projects-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding-left: 1px;
+    height: 2em;
+    background-color: rgb(154, 76, 255);
 }
 
-.sidebar-items > a:visited {
-    text-decoration: none;
-    color:aqua;
+.sidebar-item {
+    margin-left: 30px;
+    color: rgb(255, 255, 255);
+    font-size: 20px;
 }
 
-.sidebar-items > a:hover {
-    text-decoration: none;
+.add-project-button {
+    height: 24px;
+    width: 24px;
+    margin-right: 60px;
+    margin-left: 20px;
+}
+.add-project-button:hover {
+    cursor: pointer; 
 }
 
-.sidebar-items > a:active {
-    text-decoration: none;
+.project-div {
+    border: solid 2px rgb(100, 100, 100);
+    background-color: rgb(80, 80, 80);
+    padding: 7px;
+}
+
+.project-div:nth-child(n+2) {
+    margin-top: -2px;
+}
+
+.project-text {
+    margin-left: 40px;
+    font-size: 16px;
 }

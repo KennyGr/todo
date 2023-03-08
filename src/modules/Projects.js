@@ -1,8 +1,16 @@
 export const Project = (() => {
+    const projectArray = [{name: "Work", taskArray: ["eat", "sleep"]}, {name: "School"}];
+
     const projectFactory = (name) => {
-        let taskList = [];
-        return { name, taskList }
+        let taskArray = [];
+        return { name, taskArray }
     };
 
-    return { projectFactory }
+    function createProject(projectName) {
+        const newProject = projectFactory(projectName);
+        projectArray.push(newProject);
+        console.log(projectArray)
+    }
+
+    return { projectFactory, createProject, projectArray }
 })();

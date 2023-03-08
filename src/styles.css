@@ -1,3 +1,7 @@
+body {
+    overflow: hidden;
+}
+
 html, body {
   margin: 0;
   padding: 0;
@@ -26,7 +30,7 @@ a:active {
     text-decoration: none; 
 }
 
-.nice-class {
+.header-text {
     color: rgb(255, 255, 255);
     font-size: 22px;
     margin: 0 40px;
@@ -43,7 +47,7 @@ a:active {
 
 .main-container {
     display: grid;
-    grid-template: auto / 1fr 3fr;
+    grid-template: auto / 1fr 4fr;
     min-height: 92vh;
 }
 
@@ -82,17 +86,33 @@ a:active {
 .add-project-button {
     height: 24px;
     width: 24px;
-    margin-right: 60px;
+    margin-right: 30px;
     margin-left: 20px;
+    transition: all .4s;
 }
 .add-project-button:hover {
-    cursor: pointer; 
+    cursor: pointer;
+    transform: rotate(90deg);
+    transition: .4s;
 }
 
 .project-div {
+    display: flex;
+    align-items: center;
+
     border: solid 2px rgb(100, 100, 100);
+    transition: 0.3s;
     background-color: rgb(80, 80, 80);
-    padding: 7px;
+    height: 2em;
+}
+
+.project-div:hover {
+    background-color: rgb(168, 168, 168);
+    cursor: pointer;
+}
+
+.project-div:focus {
+    background-color: rgb(189, 42, 42);
 }
 
 .project-div:nth-child(n+2) {
@@ -102,4 +122,24 @@ a:active {
 .project-text {
     margin-left: 40px;
     font-size: 16px;
+}
+
+.task-container {
+    display: grid;
+    grid-template: 1fr 10fr / auto;
+}
+
+.task-header {
+    background-color: rgb(46, 46, 46);
+    color: rgb(255, 255, 255);
+    grid-area: 1 / 1 / 2 / 2;
+    padding-left: 20px;
+}
+
+.task-list {
+    grid-area: 2 / 1 / 3 / 2;
+}
+
+.task-item {
+    background-color: beige;
 }

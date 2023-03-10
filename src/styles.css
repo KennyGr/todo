@@ -96,6 +96,19 @@ a:active {
     transition: .4s;
 }
 
+.add-task-button {
+    height: 24px;
+    width: 24px;
+    margin-right: 30px;
+    margin-left: 20px;
+    transition: all .4s;
+}
+.add-task-button:hover {
+    cursor: pointer;
+    transform: rotate(90deg);
+    transition: .4s;
+}
+
 .project-div {
     display: flex;
     align-items: center;
@@ -130,6 +143,9 @@ a:active {
 }
 
 .task-header {
+    display: flex;
+    align-items: center;
+
     background-color: rgb(46, 46, 46);
     color: rgb(255, 255, 255);
     grid-area: 1 / 1 / 2 / 2;
@@ -141,5 +157,10 @@ a:active {
 }
 
 .task-item {
-    background-color: beige;
+    border: #c599ff solid 2px;
+    border-radius: 10px;
+    margin-left: 50px;
+    background-color: #c599ff;
+    width: 85%;
+    height: 70px;
 }

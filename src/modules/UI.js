@@ -1,6 +1,9 @@
 import { Project } from './Projects'
+import { Task } from './Task'
 
 export const UI = (() => {
+    let displayedProject = Project.projectArray[0];
+    
     function renderHeader() {
         let headerContainer = document.createElement("div");
         headerContainer.id = "header-container";
@@ -36,6 +39,11 @@ export const UI = (() => {
         <div id="task-container" class="task-container">
             <div class="task-header">
                 <h2>Tasks</h2>
+                <svg class="add-task-button" id="add-task-button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-circle">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="16"></line>
+                        <line x1="8" y1="12" x2="16" y2="12"></line>
+                </svg>
             </div>
             <div id="task-list" class="task-list">
             </div>
@@ -43,6 +51,7 @@ export const UI = (() => {
         `
 
        document.getElementById('add-project-button').addEventListener('click', createProjectModal)
+       document.getElementById('add-task-button').addEventListener('click', createTaskModal)
     
        initTasks();
     }
@@ -53,7 +62,10 @@ export const UI = (() => {
         for (let i = 0; i < projectArray.length; i++) {
             let projectDiv = document.createElement("div");
             projectDiv.classList.add("project-div")
-            projectDiv.onclick = () => {renderTasks(projectArray[i])};
+            projectDiv.onclick = () => {
+                displayedProject = projectArray[i]
+                renderTasks(projectArray[i]);
+            };
             let individualProject = document.createElement("li");
             individualProject.innerText = projectArray[i].name;
             individualProject.classList.add("project-text")
@@ -83,7 +95,8 @@ export const UI = (() => {
 
         for (let i = 0; i < (project.taskArray).length; i++) {
             let task = document.createElement("p");
-            task.innerText = project.taskArray[i];
+            task.innerText = project.taskArray[i].title;
+            console.log(project.taskArray[i])
             task.classList.add("task-item")
             taskList.appendChild(task);
         }
@@ -96,6 +109,15 @@ export const UI = (() => {
         }
         Project.createProject(projectName);
         renderProjects(Project.projectArray);
+    };
+
+    function createTaskModal() {
+        let taskName = prompt("Task name?");
+        if (taskName === "" || taskName === null) {
+            return;
+        }
+        Task.createTask(taskName, displayedProject);
+        renderTasks(displayedProject);
     };
 
     function renderPage() {

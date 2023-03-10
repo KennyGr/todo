@@ -1,29 +1,40 @@
-import { Project } from "./modules/Projects"
+import { Project } from "./Projects"
 
-export const taskFactory = (title, description, dueDate, priority) => {
-    return { title, description, dueDate, priority }
-};
+export const Task = (() => {
 
-export function printTask(task) {
-    console.log(task)
-};
+    const taskFactory = (title, description, dueDate, priority) => {
+        return { title, description, dueDate, priority }
+    };
 
-export function addTaskToList(project, task){
-    project.taskList.push(task);
-};
+    function createTask(taskName, project) {
+        const newTask = taskFactory(taskName);
+        console.log(project.taskArray)      
+        project.taskArray.push(newTask);
+        console.log(project.taskArray)
+    }
 
-export function updateTaskTitle(task, newTitle) {
-    task.title = newTitle;
-};
+     function printTask(task) {
+        console.log(task)
+    };
 
-export function updateTaskDescription(task, newDescription) {
-    task.description = newDescription;
-};
+     function addTaskToList(project, task){
+        project.taskList.push(task);
+    };
 
-export function updateTaskDueDate(task, newDueDate) {
-    task.dueDate = newDueDate;
-};
+     function updateTaskTitle(task, newTitle) {
+        task.title = newTitle;
+    };
 
-export function updateTaskPriority(task, newPriority) {
-    task.priority = newPriority;
-};
+     function updateTaskDescription(task, newDescription) {
+        task.description = newDescription;
+    };
+
+     function updateTaskDueDate(task, newDueDate) {
+        task.dueDate = newDueDate;
+    };
+
+     function updateTaskPriority(task, newPriority) {
+        task.priority = newPriority;
+    };
+    return { taskFactory, createTask }
+})();

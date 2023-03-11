@@ -12,7 +12,7 @@ input[type="checkbox"] {
     /* Add if not using autoprefixer */
     -webkit-appearance: none;
     appearance: none;
-    background-color: #fff;
+    background-color: #d8d8d8;
     margin: 0;
     font: inherit;
     color: currentColor;
@@ -82,9 +82,14 @@ a:active {
     min-height: 92vh;
 }
 
-.project-list {
+.project-container {
     grid-area: 1 / 1 / 2 / 2;
     background-color: rgb(114, 114, 114);
+    display: grid;
+    grid-template: 10% 90% / 100%;
+
+    list-style: none;
+    color:rgb(255, 255, 255);
 }
 
 .task-list {
@@ -92,20 +97,18 @@ a:active {
     background: rgb(80, 80, 80);
 }
 
-.sidebar-items {
-    list-style: none;
-    margin-top: 40px;
-    color:rgb(255, 255, 255);
-}
-
 .projects-bar {
+    grid-area: 1 / 1 / 2 / 2;
     display: flex;
     justify-content: space-between;
     align-items: center;
 
     padding-left: 1px;
-    height: 2em;
-    background-color: rgb(154, 76, 255);
+    background-color: rgb(30, 30, 30);
+}
+
+.project-list {
+    grid-area: 2 / 1 / 2 / 3;
 }
 
 .sidebar-item {
@@ -155,6 +158,10 @@ a:active {
     cursor: pointer;
 }
 
+.selected-project {
+    background-color: rgb(168, 168, 168);
+}
+
 .project-div:focus {
     background-color: rgb(189, 42, 42);
 }
@@ -170,7 +177,7 @@ a:active {
 
 .task-container {
     display: grid;
-    grid-template: 1fr 10fr / auto;
+    grid-template: 10% 90% / auto;
 }
 
 .task-header {
@@ -190,11 +197,17 @@ a:active {
     grid-template: 1fr / 1fr;
 }
 
+.notask-message {
+    color: white;
+    font-size: 36px;
+    padding-left: 80px;
+}
+
 .task-item {
     display: grid;
     grid-template: 100% / 5% 95%;
 
-    margin: 15px 50px;
+    margin: 15px 40px;
     border: #c599ff solid 2px;
     border-radius: 10px;
     background-color: #c599ff;
@@ -202,6 +215,7 @@ a:active {
     height: 70px;
     opacity: 1;
     transition: opacity.4s linear;
+    z-index: 2;
 }
 
 .task-info-container {
@@ -252,7 +266,6 @@ a:active {
 }
 
 .task-checkbox {
-    grid-area: ;
     display: flex;
     align-items: center;
 
@@ -269,26 +282,32 @@ a:active {
 }
 
 .task-sidebar {
-    z-index: 2;
+    z-index: 3;
     position: fixed;
     right: 0;
+    overflow: hidden;
 
-    border: #a159ff solid 7px;
-    background-color: rgb(77, 77, 77);
-    height: 90%;
-    width: 0px;
+    border: #a159ff solid 0px;
+    background-color: #606060;
+    height: 81.5%;
+    width: 30%;
+}
+
+.sidebar-info {
+    width: 340px;
+    padding: 8px 30px;
 }
 
 .task-sidebar-hidden {
     width: 0px;
-    border: #c599ff solid 20px;
+    border: #505050 solid 7px;
 
-    transition: all .2s ease-in;
+    transition: all .3s ease-in-out;
 }
 
 .task-sidebar-visible {
-    width: 340px;
+    width: 30%;
     border: #9a4cff solid 7px;
 
-    transition: all .3s ease-in-out;
+    transition: all .4s ease-in-out;
 }

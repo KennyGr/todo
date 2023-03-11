@@ -3,6 +3,7 @@ import { Task } from './Task'
 
 export const UI = (() => {
     let displayedProject = Project.projectArray[0];
+    let displayedTasks = Project.projectArray[0].taskArray;
     let sidebarToggle = false;
     
     function renderHeader() {
@@ -23,18 +24,16 @@ export const UI = (() => {
         document.body.appendChild(mainContainer);
 
         mainContainer.innerHTML = `
-        <div class="project-list">
-            <div class="sidebar-items">
-                <div id="projects-bar" class="projects-bar">
-                    <p class="sidebar-item">Projects</p>
-                    <svg class="add-project-button" id="add-project-button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-circle">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" y1="8" x2="12" y2="16"></line>
-                        <line x1="8" y1="12" x2="16" y2="12"></line>
-                    </svg>
-                </div>
-                <div class="project-list" id="project-list">
-                </div>
+        <div class="project-container">
+            <div id="projects-bar" class="projects-bar">
+                <p class="sidebar-item">Projects</p>
+                <svg class="add-project-button" id="add-project-button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-circle">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="16"></line>
+                    <line x1="8" y1="12" x2="16" y2="12"></line>
+                </svg>
+            </div>
+            <div class="project-list" id="project-list">
             </div>
         </div>
         <div id="task-container" class="task-container">
@@ -49,7 +48,7 @@ export const UI = (() => {
             <div id="task-list" class="task-list">
             </div>
         </div>
-        `
+            `
 
        document.getElementById('add-project-button').addEventListener('click', createProjectModal)
        document.getElementById('add-task-button').addEventListener('click', createTaskModal)
@@ -62,8 +61,10 @@ export const UI = (() => {
         projectList.innerHTML = '';
         for (let i = 0; i < projectArray.length; i++) {
             let projectDiv = document.createElement("div");
+            projectDiv.id = "project" + i;
             projectDiv.classList.add("project-div")
             projectDiv.onclick = () => {
+                sidebarToggle = false;
                 displayedProject = projectArray[i]
                 renderTasks(projectArray[i]);
             };
@@ -75,6 +76,18 @@ export const UI = (() => {
             projectList.appendChild(projectDiv)
         }
     }
+
+    function highlightProject() {
+        for (let projectNumber in Project.projectArray) {
+            if (document.getElementById("project" + projectNumber)) {
+                if (Project.projectArray[projectNumber].taskArray === displayedTasks) {
+                    document.getElementById("project" + projectNumber).classList.add("selected-project");
+                } else {
+                    document.getElementById("project" + projectNumber).classList.remove("selected-project");
+                }
+            }
+        }
+    };
 
     function initTasks() {
         if (Project.projectArray[0]) {
@@ -88,8 +101,8 @@ export const UI = (() => {
         taskList.innerHTML = '';
 
         let itemContainer = document.createElement("div");
-            itemContainer.id = "item-container";
-            itemContainer.classList.add("item-container");
+        itemContainer.id = "item-container";
+        itemContainer.classList.add("item-container");
 
         let taskListSection = document.getElementById("task-list");
         let taskSidebar = document.createElement("div");
@@ -99,7 +112,8 @@ export const UI = (() => {
 
         if (!project.taskArray[0]) {
             let noTaskMessage = document.createElement("p");
-            noTaskMessage.innerText = "No tasks!"
+            noTaskMessage.innerText = "No tasks yet!";
+            noTaskMessage.classList.add("notask-message");
             taskList.appendChild(noTaskMessage);
             return
         };
@@ -119,7 +133,11 @@ export const UI = (() => {
             <div class="task-date" id="task-date"><p>${project.taskArray[i].dueDate}</p></div>
             `
             taskInfo.onclick = () => {
-                toggleTaskSidebar(document.getElementById("checkbox" + i), taskSidebar);
+                if ((sidebarToggle === true) && (project.taskArray[i].title !== document.getElementById("side-title").innerHTML)) {
+                    setSidebarInfo(project.taskArray[i], taskSidebar);
+                } else {
+                    toggleTaskSidebar(project.taskArray[i], taskSidebar);
+                }
             }
 
             let checkDiv = document.createElement("div");
@@ -132,15 +150,18 @@ export const UI = (() => {
             completeCheck.checked = project.taskArray[i].complete;
             completeCheck.onchange = () => {
                 project.taskArray[i].complete = !project.taskArray[i].complete
-                console.log(project.taskArray[i])
-                console.log((document.getElementById("checkbox" + i)).checked)
-            if (project.taskArray[i].complete === true) {
-                taskItem.classList.add("task-complete")
-                Task.updateComplete(document.getElementById("checkbox" + i))
-            } else {
-                taskItem.classList.remove("task-complete")
-                Task.updateComplete(document.getElementById("checkbox" + i))
-            };
+                if (document.getElementById("side-title")) {
+                    if (project.taskArray[i].title === document.getElementById("side-title").innerHTML) {
+                        setSidebarInfo(project.taskArray[i], taskSidebar)
+                    }
+                }
+                if (project.taskArray[i].complete === true) {
+                    taskItem.classList.add("task-complete")
+                    Task.updateComplete(document.getElementById("checkbox" + i))
+                } else {
+                    taskItem.classList.remove("task-complete")
+                    Task.updateComplete(document.getElementById("checkbox" + i))
+                };
 
             }
             checkDiv.appendChild(completeCheck);
@@ -150,24 +171,73 @@ export const UI = (() => {
 
             itemContainer.appendChild(taskItem);
         }
+        displayedTasks = project.taskArray;
         taskList.appendChild(itemContainer);
+        highlightProject();
     };
 
-    function renderSidebar(task) {
-        let sidebar = document.getElementById("task-sidebar")
-        console.log(task)
+    // function renderSidebar(task) {
+    //     let sidebar = document.getElementById("task-sidebar")
+    //     sidebar.innerHTML= `
+    //         <div class="sidebar-info" id="sidebar-info">
+    //             <h2>${task.title}</h2>
+    //             <p>${task.description}</h2>
+    //             <p>${task.dueDate}</h2>
+    //             <p>${task.priority}</h2>
+    //             <p>Status: ${taskStatus}</h2>
+    //         </div>
+    //     `
+    // }
+
+    function setSidebarInfo(task, sidebarElement) {
+        let taskStatus = "";
+        if (task.complete === true) {
+            taskStatus = "Complete";
+        } else {
+            taskStatus = "Incomplete";
+        };
+        sidebarElement.innerHTML= `
+            <div class="sidebar-info" id="sidebar-info">
+                <h2 id="side-title">${task.title}</h2>
+                <p>${task.description}</h2>
+                <p>${task.dueDate}</h2>
+                <p>${task.priority}</h2>
+                <p>Status: ${taskStatus}</h2>
+            </div>
+        `
     }
 
     function toggleTaskSidebar(task, sidebarElement) {
+        let itemContainer = document.getElementById("item-container");
+        let taskStatus = "";
+        if (task.complete === true) {
+            taskStatus = "Complete";
+        } else {
+            taskStatus = "Incomplete";
+        };
+        sidebarElement.innerHTML= `
+            <div class="sidebar-info" id="sidebar-info">
+                <h2 id="side-title">${task.title}</h2>
+                <p>${task.description}</h2>
+                <p>${task.dueDate}</h2>
+                <p>${task.priority}</h2>
+                <p>Status: ${taskStatus}</h2>
+            </div>
+        `
         if (sidebarToggle === false) {
             sidebarElement.classList.remove("task-sidebar-hidden")
             sidebarElement.classList.add("task-sidebar-visible")
-            renderSidebar(task);
             sidebarToggle = !sidebarToggle;
+            itemContainer.onclick = (e) => {
+                e.stopPropagation();
+                console.log("open")
+            }
         } else {
             sidebarElement.classList.remove("task-sidebar-visible")
             sidebarElement.classList.add("task-sidebar-hidden")
             sidebarToggle = !sidebarToggle;
+            itemContainer.onclick = () => {
+            }
         }
     }
 
@@ -178,6 +248,7 @@ export const UI = (() => {
         }
         Project.createProject(projectName);
         renderProjects(Project.projectArray);
+        renderTasks(Project.projectArray[(Project.projectArray.length - 1)])
     };
 
     function createTaskModal() {

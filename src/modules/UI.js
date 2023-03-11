@@ -38,6 +38,16 @@ export const UI = (() => {
         </div>
         <div class="modal-backdrop" id="modal-backdrop"></div>
         `
+
+        document.getElementById("project-modal").addEventListener("keypress", function(event) {
+            // If the user presses the "Enter" key on the keyboard
+            if (event.key === "Enter") {
+            // Cancel the default action, if needed
+            event.preventDefault();
+            // Trigger the button element with a click
+            document.getElementById("create-project-button").click();
+            }
+        });
     }
 
     function openModal(modal) {
@@ -407,16 +417,20 @@ export const UI = (() => {
         let createButton = document.getElementById("create-project-button");
         createButton.onclick = () => {
             if (document.getElementById("create-project-form")[0].checkValidity()) {
-                let projectName = document.getElementById("project-name").value
-                Project.createProject(projectName);
-                renderProjects(Project.projectArray);
-                renderTasks(Project.projectArray[(Project.projectArray.length - 1)])
-                closeModal(projectModal);
+                createProjectItem(projectModal)
             } else {
                 document.getElementById("create-project-form")[0].reportValidity();
             }
         }
     };
+
+    function createProjectItem(projectModal) {
+        let projectName = document.getElementById("project-name").value
+        Project.createProject(projectName);
+        renderProjects(Project.projectArray);
+        renderTasks(Project.projectArray[(Project.projectArray.length - 1)])
+        closeModal(projectModal);
+    }
 
     function createTaskModal() {
         let taskModal = document.getElementById("task-modal").className;

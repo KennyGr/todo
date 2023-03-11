@@ -9,7 +9,6 @@ export const Project = (() => {
     function createProject(projectName) {
         const newProject = projectFactory(projectName);
         projectArray.push(newProject);
-        console.log(projectArray)
     }
 
     return { projectFactory, createProject, projectArray }

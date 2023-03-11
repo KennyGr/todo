@@ -6,6 +6,53 @@ export const UI = (() => {
     let displayedTasks = Project.projectArray[0].taskArray;
     let sidebarToggle = false;
     
+    function renderModals() {
+        let modalContainer = document.createElement("div");
+        modalContainer.id = "modal-container";
+        modalContainer.classList.add("modal-container");
+        document.body.appendChild(modalContainer);
+
+        modalContainer.innerHTML = `
+        <div class="project-modal" id="project-modal">
+            <div class="x-button" id="project-x-button">&times;</div>
+            <form id="createProjectForm">
+                <label for="project-name">Project Name:</label>
+                <input type="text" id="project-name" name="project-name" required>
+                <button id="create-project-button" type="button">Create</button>
+            </form>
+        </div>
+        <div class="task-modal" id="task-modal">
+            <div class="x-button" id="task-x-button">&times;</div>
+            <form id="createTaskForm">
+                <label for="task-title">Project Name:</label>
+                <input type="text" id="task-title" name="task-title" required>
+                <label for="task-desc">Project Name:</label>
+                <input type="text" id="task-desc" name="task-desc">
+                <label for="task-prio">Project Name:</label>
+                <input type="text" id="task-prio" name="task-prio">
+                <label for="task-date">Project Name:</label>
+                <input type="text" id="task-date" name="task-date">
+                <button id="create-task-button" type="button">Create</button>
+            </form>
+        </div>
+        <div class="modal-backdrop" id="modal-backdrop"></div>
+        `
+    }
+
+    function openModal(modal) {
+        document.getElementById(modal).classList.add("visible")
+        document.getElementById("modal-backdrop").classList.add("visible")
+        document.getElementById("main-container").classList.add("blur")
+        document.getElementById("header-container").classList.add("blur")
+    }
+
+    function closeModal(modal) {
+        document.getElementById(modal).classList.remove("visible")
+        document.getElementById("modal-backdrop").classList.remove("visible")
+        document.getElementById("main-container").classList.remove("blur")
+        document.getElementById("header-container").classList.remove("blur")
+    }
+
     function renderHeader() {
         let headerContainer = document.createElement("div");
         headerContainer.id = "header-container";
@@ -217,11 +264,22 @@ export const UI = (() => {
         };
         sidebarElement.innerHTML= `
             <div class="sidebar-info" id="sidebar-info">
-                <h2 id="side-title">${task.title}</h2>
-                <p>${task.description}</h2>
-                <p>${task.dueDate}</h2>
-                <p>${task.priority}</h2>
-                <p>Status: ${taskStatus}</h2>
+                <h2 class="side-title" id="side-title">${task.title}</h2>
+                <p class="side-description" id="side-description">${task.description}</h2>
+                <p class="side-dueDate" id="side-dueDate">${task.dueDate}</h2>
+                <p class="side-priority" id="side-priority">${task.priority}</h2>
+                <p class="side-title" id="side-title">Status: ${taskStatus}</h2>
+                <button class="delete-button" id="delete-button">
+                    <div class="delete-container">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        <line x1="10" y1="11" x2="10" y2="17"></line>
+                        <line x1="14" y1="11" x2="14" y2="17"></line>
+                    </svg>
+                    <p class="delete-text">Delete</p>
+                    </div>
+                </button>
             </div>
         `
         if (sidebarToggle === false) {
@@ -242,25 +300,68 @@ export const UI = (() => {
     }
 
     function createProjectModal() {
-        let projectName = prompt("Project name?");
-        if (projectName === "" || projectName === null) {
-            return;
+        let projectModal = document.getElementById("project-modal").className;
+        let backdrop = document.getElementById("modal-backdrop");
+        let xButton = document.getElementById("project-x-button");
+
+        openModal(projectModal);
+
+        backdrop.onclick = () => {
+            closeModal(projectModal);
         }
-        Project.createProject(projectName);
-        renderProjects(Project.projectArray);
-        renderTasks(Project.projectArray[(Project.projectArray.length - 1)])
+
+        xButton.onclick = () => {
+            closeModal(projectModal);
+        } 
+
+        let createButton = document.getElementById("create-project-button");
+        createButton.onclick = () => {
+            if (document.getElementById("createProjectForm")[0].checkValidity()) {
+                let projectName = document.getElementById("project-name").value
+                Project.createProject(projectName);
+                renderProjects(Project.projectArray);
+                renderTasks(Project.projectArray[(Project.projectArray.length - 1)])
+                closeModal(projectModal);
+            } else {
+                document.getElementById("createProjectForm")[0].reportValidity();
+            }
+        }
     };
 
     function createTaskModal() {
-        let taskName = prompt("Task name?");
-        if (taskName === "" || taskName === null) {
-            return;
+        let taskModal = document.getElementById("task-modal").className;
+        let backdrop = document.getElementById("modal-backdrop");
+        let xButton = document.getElementById("task-x-button");
+
+        openModal(taskModal);
+
+        backdrop.onclick = () => {
+            closeModal(taskModal);
         }
-        Task.createTask(taskName, displayedProject);
-        renderTasks(displayedProject);
+
+        xButton.onclick = () => {
+            closeModal(taskModal);
+        } 
+
+        let createButton = document.getElementById("create-task-button");
+        createButton.onclick = () => {
+            if (document.getElementById("createTaskForm")[0].checkValidity()) {
+                let taskTitle = document.getElementById("task-title").value
+                let taskDesc = document.getElementById("task-desc").value
+                let taskPrio = document.getElementById("task-prio").value
+                let taskDate = document.getElementById("task-date").value
+                console.log(taskTitle, taskDesc, taskPrio, taskDate, displayedProject)
+                Task.createTask(taskTitle, taskDesc, taskPrio, taskDate, displayedProject);
+                renderTasks(displayedProject);
+                closeModal(taskModal);
+            } else {
+                document.getElementById("createTaskForm")[0].reportValidity();
+            }
+        }
     };
 
     function renderPage() {
+        renderModals();
         renderHeader();
         renderMainContainer();
         renderProjects(Project.projectArray);

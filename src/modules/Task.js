@@ -6,16 +6,11 @@ export const Task = (() => {
         return { title, description, dueDate, priority, complete }
     };
 
-    function createTask(taskName, project) {
-        const newTask = taskFactory(taskName, "hi", "hi", "hi", false);
-        console.log(project.taskArray)      
+    function createTask(taskName, taskDesc, taskDate, taskPrio, project) {
+        const newTask = taskFactory(taskName, taskDesc, taskDate, taskPrio, false);
+        console.log(project)
         project.taskArray.push(newTask);
-        console.log(project.taskArray)
     }
-
-    function printTask(task) {
-        console.log(task)
-    };
 
     function addTaskToList(project, task){
         project.taskList.push(task);

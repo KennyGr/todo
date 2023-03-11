@@ -12,10 +12,6 @@ export const Task = (() => {
         project.taskArray.push(newTask);
     }
 
-    function addTaskToList(project, task){
-        project.taskList.push(task);
-    };
-
     function updateTaskTitle(task, newTitle) {
         task.title = newTitle;
     };

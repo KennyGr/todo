@@ -1,5 +1,6 @@
 const path = require('path');
  const HtmlWebpackPlugin = require('html-webpack-plugin');
+ const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 
  module.exports = {
    mode: 'development',
@@ -52,6 +53,7 @@ const path = require('path');
        title: 'To-Do List',
        favicon: './src/favicon.png',
      }),
+     new MomentLocalesPlugin(),
    ],
    output: {
      filename: '[name].js',

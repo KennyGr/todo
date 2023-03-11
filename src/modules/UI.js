@@ -1,5 +1,6 @@
 import { Project } from './Projects'
 import { Task } from './Task'
+var moment = require('moment');
 
 export const UI = (() => {
     let displayedProject = Project.projectArray[0];
@@ -24,14 +25,14 @@ export const UI = (() => {
         <div class="task-modal" id="task-modal">
             <div class="x-button" id="task-x-button">&times;</div>
             <form id="createTaskForm">
-                <label for="task-title">Project Name:</label>
+                <label for="task-title">Title:</label>
                 <input type="text" id="task-title" name="task-title" required>
-                <label for="task-desc">Project Name:</label>
+                <label for="task-desc">Description:</label>
                 <input type="text" id="task-desc" name="task-desc">
-                <label for="task-prio">Project Name:</label>
-                <input type="text" id="task-prio" name="task-prio">
-                <label for="task-date">Project Name:</label>
-                <input type="text" id="task-date" name="task-date">
+                <label for="task-prio">Priority Name:</label>
+                <input type="text" id="task-prio" name="task-prio" value="Low">
+                <label for="task-date">Deadline:</label>
+                <input type="date" id="task-date" name="task-date" value="${moment().format("YYYY-MM-DD")}">
                 <button id="create-task-button" type="button">Create</button>
             </form>
         </div>
@@ -85,12 +86,25 @@ export const UI = (() => {
         </div>
         <div id="task-container" class="task-container">
             <div class="task-header">
-                <h2>Tasks</h2>
-                <svg class="add-task-button" id="add-task-button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-circle">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <line x1="12" y1="8" x2="12" y2="16"></line>
-                        <line x1="8" y1="12" x2="16" y2="12"></line>
-                </svg>
+                <div class="add-task">
+                    <h2>Tasks</h2>
+                    <svg class="add-task-button" id="add-task-button" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-circle">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="16"></line>
+                            <line x1="8" y1="12" x2="16" y2="12"></line>
+                    </svg>
+                </div>
+                <div class="select-date">
+                    <p class="due-today" id="due-today">
+                    Today
+                    </p>
+                    <p class="due-today" id="due-today">
+                    This Week
+                    </p>
+                    <p class="due-today" id="due-today">
+                    This Month
+                    </p>
+                </div>
             </div>
             <div id="task-list" class="task-list">
             </div>
@@ -168,6 +182,7 @@ export const UI = (() => {
         for (let i = 0; i < (project.taskArray).length; i++) {
             let taskItem = document.createElement("div");
             taskItem.classList.add("task-item")
+            taskItem.name = "task-item"
             if (project.taskArray[i].complete === true) {
                 taskItem.classList.add("task-complete");
             };
@@ -179,7 +194,8 @@ export const UI = (() => {
             <div class="task-prio" id="task-prio"><p>${project.taskArray[i].priority}</p></div>
             <div class="task-date" id="task-date"><p>${project.taskArray[i].dueDate}</p></div>
             `
-            taskInfo.onclick = () => {
+            taskInfo.onclick = (e) => {
+                e.stopPropagation();
                 if ((sidebarToggle === true) && (project.taskArray[i].title !== document.getElementById("side-title").innerHTML)) {
                     setSidebarInfo(project.taskArray[i], taskSidebar);
                 } else {
@@ -196,6 +212,12 @@ export const UI = (() => {
             completeCheck.type = "checkbox"
             completeCheck.checked = project.taskArray[i].complete;
             completeCheck.onchange = () => {
+                project.taskArray[i].complete;
+            }
+
+            checkDiv.onclick = (e) => {
+                e.stopPropagation();
+                completeCheck.checked = !project.taskArray[i].complete;
                 project.taskArray[i].complete = !project.taskArray[i].complete
                 if (document.getElementById("side-title")) {
                     if (project.taskArray[i].title === document.getElementById("side-title").innerHTML) {
@@ -209,8 +231,9 @@ export const UI = (() => {
                     taskItem.classList.remove("task-complete")
                     Task.updateComplete(document.getElementById("checkbox" + i))
                 };
-
+                console.log(project.taskArray[i])
             }
+
             checkDiv.appendChild(completeCheck);
 
             taskItem.appendChild(checkDiv);
@@ -223,19 +246,6 @@ export const UI = (() => {
         highlightProject();
     };
 
-    // function renderSidebar(task) {
-    //     let sidebar = document.getElementById("task-sidebar")
-    //     sidebar.innerHTML= `
-    //         <div class="sidebar-info" id="sidebar-info">
-    //             <h2>${task.title}</h2>
-    //             <p>${task.description}</h2>
-    //             <p>${task.dueDate}</h2>
-    //             <p>${task.priority}</h2>
-    //             <p>Status: ${taskStatus}</h2>
-    //         </div>
-    //     `
-    // }
-
     function setSidebarInfo(task, sidebarElement) {
         let taskStatus = "";
         if (task.complete === true) {
@@ -244,18 +254,36 @@ export const UI = (() => {
             taskStatus = "Incomplete";
         };
         sidebarElement.innerHTML= `
-            <div class="sidebar-info" id="sidebar-info">
-                <h2 id="side-title">${task.title}</h2>
-                <p>${task.description}</h2>
-                <p>${task.dueDate}</h2>
-                <p>${task.priority}</h2>
-                <p>Status: ${taskStatus}</h2>
-            </div>
+        <div class="sidebar-info" id="sidebar-info">
+            <h2 class="side-title" id="side-title">${task.title}</h2>
+            <p class="side-description" id="side-description">${task.description}</h2>
+            <p class="side-dueDate" id="side-dueDate">${task.dueDate}</h2>
+            <p class="side-priority" id="side-priority">${task.priority}</h2>
+            <p class="side-title" id="side-title">Status: ${taskStatus}</h2>
+            <button class="delete-button" id="delete-button">
+                <div class="delete-container">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2">
+                    <polyline points="3 6 5 6 21 6"></polyline>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                </svg>
+                <p class="delete-text">Delete</p>
+                </div>
+            </button>
+        </div>
         `
     }
 
     function toggleTaskSidebar(task, sidebarElement) {
         let itemContainer = document.getElementById("item-container");
+        itemContainer.onclick = () => {
+            console.log("hiding-containerclick")
+            sidebarElement.classList.remove("task-sidebar-visible")
+            sidebarElement.classList.add("task-sidebar-hidden")
+            sidebarToggle = false;
+        }
+
         let taskStatus = "";
         if (task.complete === true) {
             taskStatus = "Complete";
@@ -283,14 +311,12 @@ export const UI = (() => {
             </div>
         `
         if (sidebarToggle === false) {
+            console.log("showing")
             sidebarElement.classList.remove("task-sidebar-hidden")
             sidebarElement.classList.add("task-sidebar-visible")
             sidebarToggle = !sidebarToggle;
-            itemContainer.onclick = (e) => {
-                e.stopPropagation();
-                console.log("open")
-            }
         } else {
+            console.log("hiding")
             sidebarElement.classList.remove("task-sidebar-visible")
             sidebarElement.classList.add("task-sidebar-hidden")
             sidebarToggle = !sidebarToggle;
@@ -349,7 +375,7 @@ export const UI = (() => {
                 let taskTitle = document.getElementById("task-title").value
                 let taskDesc = document.getElementById("task-desc").value
                 let taskPrio = document.getElementById("task-prio").value
-                let taskDate = document.getElementById("task-date").value
+                let taskDate = moment(document.getElementById("task-date").value).format("YYYY/M/D");
                 console.log(taskTitle, taskDesc, taskPrio, taskDate, displayedProject)
                 Task.createTask(taskTitle, taskDesc, taskPrio, taskDate, displayedProject);
                 renderTasks(displayedProject);

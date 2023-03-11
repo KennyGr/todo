@@ -15,16 +15,16 @@ export const UI = (() => {
 
         modalContainer.innerHTML = `
         <div class="project-modal" id="project-modal">
-            <div class="x-button" id="project-x-button">&times;</div>
-            <form id="createProjectForm">
+            <div class="project-x-button" id="project-x-button">&times;</div>
+            <form class="create-project-form" id="create-project-form">
                 <label for="project-name">Project Name:</label>
-                <input type="text" id="project-name" name="project-name" required>
-                <button id="create-project-button" type="button">Create</button>
+                <input type="text" id="project-name" class="project-name" name="project-name" required>
             </form>
+            <button id="create-project-button" class="create-project-button" type="button">Create</button>
         </div>
         <div class="task-modal" id="task-modal">
-            <div class="x-button" id="task-x-button">&times;</div>
-            <form id="createTaskForm">
+            <div class="task-x-button" id="task-x-button">&times;</div>
+            <form class="create-task-form" id="create-task-form">
                 <label for="task-title">Title:</label>
                 <input type="text" id="task-title" name="task-title" required>
                 <label for="task-desc">Description:</label>
@@ -104,6 +104,8 @@ export const UI = (() => {
                     <p class="due-today" id="due-today">
                     This Month
                     </p>
+                    <label for="theme-selector">Theme:</label>
+                    <input type="color" id="theme-selector" class="theme-selector" name="theme-selector" value="#ff7070">
                 </div>
             </div>
             <div id="task-list" class="task-list">
@@ -111,10 +113,76 @@ export const UI = (() => {
         </div>
             `
 
-       document.getElementById('add-project-button').addEventListener('click', createProjectModal)
-       document.getElementById('add-task-button').addEventListener('click', createTaskModal)
+        document.getElementById('theme-selector').addEventListener('input', changeTheme)
+        document.getElementById('add-project-button').addEventListener('click', createProjectModal)
+        document.getElementById('add-task-button').addEventListener('click', createTaskModal)
     
        initTasks();
+    }
+
+    function changeTheme() {
+        let colorValue = (document.getElementById("theme-selector").value);
+
+        function hexToHSL(H) {
+            // Convert hex to RGB first
+            let r = 0, g = 0, b = 0;
+            if (H.length == 4) {
+              r = "0x" + H[1] + H[1];
+              g = "0x" + H[2] + H[2];
+              b = "0x" + H[3] + H[3];
+            } else if (H.length == 7) {
+              r = "0x" + H[1] + H[2];
+              g = "0x" + H[3] + H[4];
+              b = "0x" + H[5] + H[6];
+            }
+            // Then to HSL
+            r /= 255;
+            g /= 255;
+            b /= 255;
+            let cmin = Math.min(r,g,b),
+                cmax = Math.max(r,g,b),
+                delta = cmax - cmin,
+                h = 0,
+                s = 0,
+                l = 0;
+          
+            if (delta == 0)
+              h = 0;
+            else if (cmax == r)
+              h = ((g - b) / delta) % 6;
+            else if (cmax == g)
+              h = (b - r) / delta + 2;
+            else
+              h = (r - g) / delta + 4;
+          
+            h = Math.round(h * 60);
+          
+            if (h < 0)
+              h += 360;
+          
+            l = (cmax + cmin) / 2;
+            s = delta == 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
+            s = +(s * 100).toFixed(1);
+            l = +(l * 100).toFixed(1);
+
+            let lightShade = "hsl(" + h + "," + s + "%," + (l + 14) + "%)";
+          
+            return lightShade
+          }
+
+        let hslLightValue = hexToHSL(colorValue)
+
+        let textColorCheck = hslLightValue.match(/(?<=,)[^,]+(?=%\))/);
+
+        const root = document.querySelector(':root');
+        if (textColorCheck > (74) ) {
+            root.style.setProperty('--text', "black");
+        } else {
+            root.style.setProperty('--text', "white");
+        }
+        
+        root.style.setProperty('--main', colorValue);
+        root.style.setProperty('--sub', hslLightValue);
     }
 
     function renderProjects(projectArray) {
@@ -231,7 +299,6 @@ export const UI = (() => {
                     taskItem.classList.remove("task-complete")
                     Task.updateComplete(document.getElementById("checkbox" + i))
                 };
-                console.log(project.taskArray[i])
             }
 
             checkDiv.appendChild(completeCheck);
@@ -278,7 +345,6 @@ export const UI = (() => {
     function toggleTaskSidebar(task, sidebarElement) {
         let itemContainer = document.getElementById("item-container");
         itemContainer.onclick = () => {
-            console.log("hiding-containerclick")
             sidebarElement.classList.remove("task-sidebar-visible")
             sidebarElement.classList.add("task-sidebar-hidden")
             sidebarToggle = false;
@@ -311,12 +377,10 @@ export const UI = (() => {
             </div>
         `
         if (sidebarToggle === false) {
-            console.log("showing")
             sidebarElement.classList.remove("task-sidebar-hidden")
             sidebarElement.classList.add("task-sidebar-visible")
             sidebarToggle = !sidebarToggle;
         } else {
-            console.log("hiding")
             sidebarElement.classList.remove("task-sidebar-visible")
             sidebarElement.classList.add("task-sidebar-hidden")
             sidebarToggle = !sidebarToggle;
@@ -342,14 +406,14 @@ export const UI = (() => {
 
         let createButton = document.getElementById("create-project-button");
         createButton.onclick = () => {
-            if (document.getElementById("createProjectForm")[0].checkValidity()) {
+            if (document.getElementById("create-project-form")[0].checkValidity()) {
                 let projectName = document.getElementById("project-name").value
                 Project.createProject(projectName);
                 renderProjects(Project.projectArray);
                 renderTasks(Project.projectArray[(Project.projectArray.length - 1)])
                 closeModal(projectModal);
             } else {
-                document.getElementById("createProjectForm")[0].reportValidity();
+                document.getElementById("create-project-form")[0].reportValidity();
             }
         }
     };
@@ -371,7 +435,7 @@ export const UI = (() => {
 
         let createButton = document.getElementById("create-task-button");
         createButton.onclick = () => {
-            if (document.getElementById("createTaskForm")[0].checkValidity()) {
+            if (document.getElementById("create-task-form")[0].checkValidity()) {
                 let taskTitle = document.getElementById("task-title").value
                 let taskDesc = document.getElementById("task-desc").value
                 let taskPrio = document.getElementById("task-prio").value
@@ -381,7 +445,7 @@ export const UI = (() => {
                 renderTasks(displayedProject);
                 closeModal(taskModal);
             } else {
-                document.getElementById("createTaskForm")[0].reportValidity();
+                document.getElementById("create-task-form")[0].reportValidity();
             }
         }
     };

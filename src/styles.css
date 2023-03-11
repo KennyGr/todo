@@ -1,3 +1,9 @@
+:root {
+    --main: #ff7070;
+    --sub: #ffb8b7;
+    --text: hsl(0, 0%, 0%);
+  }
+
 body {
     overflow: hidden;
 }
@@ -39,7 +45,7 @@ input[type="checkbox"]:checked::before {
     transform: scale(1);
 }
 
-h1, h2, h3, h4, h5, h6, p, li {
+h1, h2, h3, h4, h5, h6, p, li, label {
     font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -73,16 +79,16 @@ a:active {
   
   /* Handle */
   ::-webkit-scrollbar-thumb {
-    background: rgb(154, 76, 255);
+    background: var(--main)
   }
   
   /* Handle on hover */
   ::-webkit-scrollbar-thumb:hover {
-    background: rgb(197 153 255);
+    background: var(--sub);
   }
 
 .header-text {
-    color: rgb(255, 255, 255);
+    color: var(--text);
     font-size: 22px;
     margin: 0 40px;
 }
@@ -93,7 +99,7 @@ a:active {
 
     height: 8vh;
     min-width: 100vw;
-    background-color: rgb(154, 76, 255);
+    background-color: var(--main)
 }
 
 .main-container {
@@ -252,9 +258,9 @@ a:active {
     grid-template: 100% / 6% 94%;
 
     margin: 15px 40px;
-    border: #c599ff solid 2px;
+    border: var(--sub) solid 2px;
     border-radius: 10px;
-    background-color: #c599ff;
+    background-color: var(--sub);
     width: 85%;
     height: 70px;
     opacity: 1;
@@ -267,6 +273,8 @@ a:active {
 
     display: grid;
     grid-template: 50% 50% / 20px repeat(7, 1fr);
+
+    color: var(--text);
 }
 
 .task-info-container:hover {
@@ -356,7 +364,7 @@ a:active {
 
 .task-sidebar-visible {
     width: 30%;
-    border: #9a4cff solid 7px;
+    border: var(--main) solid 7px;
 
     transition: all .4s ease-in-out;
 }
@@ -371,6 +379,9 @@ a:active {
 }
 
 .project-modal {
+    display: grid;
+    grid-template: 1fr 10fr 2fr/ 10fr 3fr 1fr;
+
     position: absolute;
     left: 5%; 
     right: 0; 
@@ -378,10 +389,40 @@ a:active {
     bottom: 10%;
     margin: auto;
     z-index: 999;
-    height: 50%;
-    width: 60%;
-    background-color: #0e6aff;
+    height: 30%;
+    width: 50%;
+    background-color: #2f2f2f;
+    color: white;
     visibility: hidden;
+}
+
+.project-x-button {
+    grid-area: 1 / 2 / 2 / 3;
+
+    display: flex;
+    justify-content: center;
+
+    font-size: 35px;
+    color: white;
+}
+
+.create-project-form {
+    grid-area: 1 / 1 / 3 / 3;
+    font-size: 2rem;
+    padding: 18px 40px;
+}
+
+.project-name {
+    margin-top: 20px;
+    width: 60%;
+    height: 20%
+}
+
+.create-project-button {
+    grid-area: 3 / 2 / 4 / 4;
+
+    margin: 10px 0px;
+    max-width: 100%;
 }
 
 .task-modal {

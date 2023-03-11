@@ -49,7 +49,8 @@ const path = require('path');
   },
    plugins: [
      new HtmlWebpackPlugin({
-       title: 'Development',
+       title: 'To-Do List',
+       favicon: './src/favicon.png',
      }),
    ],
    output: {

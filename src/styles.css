@@ -2,6 +2,7 @@
     --main: #ff7070;
     --sub: #ffb8b7;
     --text: hsl(0, 0%, 0%);
+    --main-height: 87vh;
   }
 
 body {
@@ -50,6 +51,17 @@ input[type="checkbox"]::before {
 
 input[type="checkbox"]:checked::before {
     transform: scale(1);
+}
+
+input[type="color"] {
+    height: 20px;
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+	padding: 0;
+}
+input[type="color"]::-webkit-color-swatch {
+	border: none;
 }
 
 h1, h2, h3, h4, h5, h6, p, li, label, legend {
@@ -117,7 +129,7 @@ a:active {
 .main-container {
     display: grid;
     grid-template: auto / 1fr 4fr;
-    min-height: 92vh;
+    min-height: var(--main-height);
 }
 
 .project-container {
@@ -125,7 +137,7 @@ a:active {
     background-color: rgb(114, 114, 114);
     display: grid;
     grid-template: 10% 90% / 100%;
-    max-height: 92vh;
+    max-height: var(--main-height);
 
     list-style: none;
     color:rgb(255, 255, 255);
@@ -213,11 +225,6 @@ a:active {
 .project-text {
     margin-left: 40px;
     font-size: 16px;
-}
-
-.task-container {
-    display: grid;
-    grid-template: 10% 90% / auto;
 }
 
 .item-container {
@@ -343,8 +350,11 @@ a:active {
 }
 
 .task-container {
+    display: grid;
+    grid-template: 10% 90% / auto;
+
     width: 100%;
-    max-height: 92vh;
+    max-height: var(--main-height);
 }
 
 .task-sidebar {
@@ -355,13 +365,12 @@ a:active {
 
     border: var(--main) solid 0px;
     background-color: #606060;
-    height: 81.5%;
+    height: 76.61%;
     width: 30%;
 }
 
 .sidebar-info {
     display: grid;
-    /* Add grid details here */
 
     width: 340px;
     padding: 8px 30px;
@@ -558,7 +567,8 @@ a:active {
 
 .modal-backdrop {
     position:fixed;
-    top:0;
+    top:8vh;
+    bottom: 7vh;
     left:0;
     width:100vw;
     height:100vh;
@@ -575,4 +585,40 @@ a:active {
     pointer-events: none;
 
     transition: filter .2s ease-in-out;
+}
+
+.footer-container {
+    display: grid;
+    grid-template: 1fr / 1fr 1fr 1fr;
+
+    position: fixed;
+    bottom: 0px;
+
+    width: 100vw;
+    background-color: #1e1e1e;
+    height: 5vh;
+}
+
+.footer-text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    grid-area: 1 / 2 / 2 / 3;
+
+    color: white;
+    margin: 0px;
+}
+
+.theme-container {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    
+
+    grid-area: 1 / 3 / 2 / 4;
+
+    color: white;
+    margin-right: 40px;
+    column-gap: 14px;
 }

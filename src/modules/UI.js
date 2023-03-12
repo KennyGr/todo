@@ -64,14 +64,16 @@ export const UI = (() => {
         document.getElementById(modal).classList.add("visible")
         document.getElementById("modal-backdrop").classList.add("visible")
         document.getElementById("main-container").classList.add("blur")
-        document.getElementById("header-container").classList.add("blur")
+        // document.getElementById("header-container").classList.add("blur")
+        // document.getElementById("footer-container").classList.add("blur")
     }
 
     function closeModal(modal) {
         document.getElementById(modal).classList.remove("visible")
         document.getElementById("modal-backdrop").classList.remove("visible")
         document.getElementById("main-container").classList.remove("blur")
-        document.getElementById("header-container").classList.remove("blur")
+        // document.getElementById("header-container").classList.remove("blur")
+        // document.getElementById("footer-container").classList.remove("blur")
     }
 
     function renderHeader() {
@@ -124,8 +126,6 @@ export const UI = (() => {
                     <p class="due-today" id="due-today">
                     This Month
                     </p>
-                    <label for="theme-selector">Theme:</label>
-                    <input type="color" id="theme-selector" class="theme-selector" name="theme-selector" value="#ff7070">
                 </div>
             </div>
             <div id="task-list" class="task-list">
@@ -133,12 +133,28 @@ export const UI = (() => {
         </div>
             `
 
-        document.getElementById('theme-selector').addEventListener('input', changeTheme)
         document.getElementById('add-project-button').addEventListener('click', createProjectModal)
         document.getElementById('add-task-button').addEventListener('click', createTaskModal)
     
        initTasks();
     }
+
+    function renderFooter() {
+        let footerContainer = document.createElement("div");
+        footerContainer.id = "footer-container";
+        footerContainer.classList.add("footer-container");
+        document.body.appendChild(footerContainer);
+
+        footerContainer.innerHTML = `
+        <p class="footer-text">©︎ Kenny 2023</p>
+        <div class="theme-container">
+            <label for="theme-selector">Color Theme:</label>
+            <input type="color" id="theme-selector" class="theme-selector" name="theme-selector" value="#ff7070">
+        </div>
+        `
+        
+        document.getElementById('theme-selector').addEventListener('input', changeTheme)
+    };
 
     function changeTheme() {
         let colorValue = (document.getElementById("theme-selector").value);
@@ -480,6 +496,7 @@ export const UI = (() => {
         renderHeader();
         renderMainContainer();
         renderProjects(Project.projectArray);
+        renderFooter()
     }
 
     return { renderPage }

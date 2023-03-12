@@ -13,5 +13,16 @@ export const Project = (() => {
         projectArray.push(newProject);
     }
 
-    return { projectFactory, createProject, projectArray }
+    function deleteTask(project, task) {
+        let taskArray = project.taskArray
+        let taskToDelete;
+        for (let taskIndex in taskArray) {
+            if (taskArray[taskIndex] === task) {
+                taskToDelete = taskIndex;
+            }
+        };
+        taskArray.splice(taskToDelete, 1)
+    }
+
+    return { projectFactory, createProject, projectArray, deleteTask }
 })();

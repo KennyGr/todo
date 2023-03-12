@@ -354,13 +354,14 @@ export const UI = (() => {
                     project.taskArray[i].completedOn = moment("3000-12-25");
                 };
                 document.getElementById("item-container").classList.add("disable-click")
-                setTimeout(function() {
-                    document.getElementById("item-container").classList.remove("disable-click")
-                }, 1000);
-                setTimeout(function() {
-                    renderTasks(displayedProject);
-                }, 1000);
-                // document.getElementById("item-container").classList.remove("disable-click")
+                if (project.taskArray.length !== 0) {
+                    setTimeout(function() {
+                        document.getElementById("item-container").classList.remove("disable-click")
+                    }, 1000);
+                    setTimeout(function() {
+                        renderTasks(displayedProject);
+                    }, 1000);
+                }
             }
             
             checkDiv.appendChild(completeCheck);
@@ -413,6 +414,14 @@ export const UI = (() => {
             taskStatus = "Incomplete";
         };
         sidebarElement.innerHTML= sidebarHTML(task, taskStatus);
+
+        (document.getElementById("delete-button")).onclick = () => {
+            Project.deleteTask(displayedProject, sidebarTaskDisplayed);
+            sidebarElement.classList.remove("task-sidebar-visible")
+            sidebarElement.classList.add("task-sidebar-hidden")
+            sidebarToggle = false;
+            renderTasks(displayedProject)
+        }
     }
 
     function toggleTaskSidebar(task, sidebarElement) {
@@ -442,6 +451,14 @@ export const UI = (() => {
             sidebarToggle = !sidebarToggle;
             itemContainer.onclick = () => {
             }
+        }
+
+        (document.getElementById("delete-button")).onclick = () => {
+            Project.deleteTask(displayedProject, sidebarTaskDisplayed);
+            sidebarElement.classList.remove("task-sidebar-visible")
+            sidebarElement.classList.add("task-sidebar-hidden")
+            sidebarToggle = false;
+            renderTasks(displayedProject)
         }
     }
 

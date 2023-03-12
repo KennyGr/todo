@@ -85,6 +85,12 @@ export const UI = (() => {
         document.getElementById("create-task-form").reset();
     }
 
+    function closeSidebar() {
+        document.getElementById("task-sidebar").classList.remove("task-sidebar-visible")
+        document.getElementById("task-sidebar").classList.add("task-sidebar-hidden")
+        sidebarToggle = false;
+    }
+
     function renderHeader() {
         let headerContainer = document.createElement("div");
         headerContainer.id = "header-container";
@@ -283,6 +289,11 @@ export const UI = (() => {
         let itemContainer = document.createElement("div");
         itemContainer.id = "item-container";
         itemContainer.classList.add("item-container");
+        if (sidebarToggle === true) {
+            itemContainer.onclick = () => {
+                closeSidebar();
+            }
+        }
 
         let taskListSection = document.getElementById("task-list");
         let taskSidebar = document.createElement("div");
@@ -317,7 +328,7 @@ export const UI = (() => {
             taskInfo.onclick = (e) => {
                 e.stopPropagation();
                 if ((sidebarToggle === true) && (project.taskArray[i].title !== document.getElementById("side-title").innerHTML)) {
-                    setSidebarInfo(project.taskArray[i], taskSidebar);
+                    setSidebarInfo(project.taskArray[i], taskSidebar, e);
                 } else {
                     toggleTaskSidebar(project.taskArray[i], taskSidebar);
                 }
@@ -341,7 +352,7 @@ export const UI = (() => {
                 project.taskArray[i].complete = !project.taskArray[i].complete
                 if (document.getElementById("side-title")) {
                     if (project.taskArray[i].title === document.getElementById("side-title").innerHTML) {
-                        setSidebarInfo(project.taskArray[i], taskSidebar)
+                        setSidebarInfo(project.taskArray[i], taskSidebar, e)
                     }
                 }
                 if (project.taskArray[i].complete === true) {
@@ -357,10 +368,10 @@ export const UI = (() => {
                 if (project.taskArray.length !== 0) {
                     setTimeout(function() {
                         document.getElementById("item-container").classList.remove("disable-click")
-                    }, 1000);
+                    }, 800);
                     setTimeout(function() {
                         renderTasks(displayedProject);
-                    }, 1000);
+                    }, 800);
                 }
             }
             
@@ -384,36 +395,52 @@ export const UI = (() => {
     function sidebarHTML(task, taskStatus) {
         return `
                 <div class="sidebar-info" id="sidebar-info">
-                    <h2 class="side-title" id="side-title">${task.title}</h2>
-                    <div class="desc-container">
-                        <p class="side-description" id="side-description">${task.description}</p>
-                    </div>
-                    <p class="side-dueDate" id="side-dueDate">Deadline: ${task.dueDate}</p>
-                    <p class="side-priority" id="side-priority">${task.priority}</p>
-                    <p class="side-status" id="side-status">Status: ${taskStatus}</p>
-                    <button class="delete-button" id="delete-button">
-                        <div class="delete-container">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2">
-                            <polyline points="3 6 5 6 21 6"></polyline>
-                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                            <line x1="10" y1="11" x2="10" y2="17"></line>
-                            <line x1="14" y1="11" x2="14" y2="17"></line>
-                        </svg>
-                        <p class="delete-text">Delete</p>
+                    <div class="info-container">
+                        <input type="text" value="${task.title}" class="side-title" id="side-title">
+                        <div class="desc-container">
+                            <textarea cols="50" rows="6" class="side-description" id="side-description">${task.description}</textarea>
                         </div>
-                    </button>
+                        <p class="side-priority" id="side-priority">${task.priority}</p>
+                        <div class="due-date-container">
+                            <label for="side-due-date">Deadline: </label>
+                            <input type="date" class="side-due-date" id="side-due-date" name="side-due-date" value="${moment(task.dueDate).format("yyyy-MM-DD")}">
+                        </div>
+                        <p class="side-status" id="side-status">Status: ${taskStatus}</p>
+                        <button class="delete-button" id="delete-button">
+                            <div class="delete-container">
+                                <p class="delete-text">Delete</p>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2">
+                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                                </svg>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="sidebar-x-button" id="sidebar-x-button">&times;</div>
                 </div>
                 `
     }
 
-    function setSidebarInfo(task, sidebarElement) {
+    function setSidebarInfo(task, sidebarElement, eventTarget) {
         let taskStatus = "";
         if (task.complete === true) {
             taskStatus = "Complete";
         } else {
             taskStatus = "Incomplete";
         };
-        sidebarElement.innerHTML= sidebarHTML(task, taskStatus);
+        if (eventTarget !== undefined && task !== sidebarTaskDisplayed) {
+            sidebarElement.classList.add("quick-blur");
+            sidebarElement.innerHTML= sidebarHTML(task, taskStatus);
+            setTimeout(() => {
+                sidebarElement.classList.remove("quick-blur");
+            }, 50);
+        } else {
+            sidebarElement.innerHTML= sidebarHTML(task, taskStatus);
+        };
+
+        sidebarTaskDisplayed = task;
 
         (document.getElementById("delete-button")).onclick = () => {
             Project.deleteTask(displayedProject, sidebarTaskDisplayed);
@@ -422,14 +449,31 @@ export const UI = (() => {
             sidebarToggle = false;
             renderTasks(displayedProject)
         }
+
+        (document.getElementById("side-title")).onchange = () => {
+            sidebarTaskDisplayed.title = (document.getElementById("side-title")).value;
+            console.log(sidebarTaskDisplayed)
+            renderTasks(displayedProject)
+            console.log(sidebarTaskDisplayed)
+        }
+        (document.getElementById("side-description")).onchange = () => {
+            sidebarTaskDisplayed.description = (document.getElementById("side-description")).value;
+            console.log(sidebarTaskDisplayed)
+            renderTasks(displayedProject)
+            console.log(sidebarToggle)
+        }
+        (document.getElementById("side-due-date")).onchange = () => {
+            sidebarTaskDisplayed.dueDate = moment((document.getElementById("side-due-date")).value).format("YYYY-MM-DD");
+            renderTasks(displayedProject)
+            console.log(sidebarTaskDisplayed)
+        }
     }
 
     function toggleTaskSidebar(task, sidebarElement) {
         let itemContainer = document.getElementById("item-container");
+
         itemContainer.onclick = () => {
-            sidebarElement.classList.remove("task-sidebar-visible")
-            sidebarElement.classList.add("task-sidebar-hidden")
-            sidebarToggle = false;
+            closeSidebar();
         }
 
         let taskStatus = "";
@@ -438,6 +482,7 @@ export const UI = (() => {
         } else {
             taskStatus = "Incomplete";
         };
+
         sidebarElement.innerHTML= sidebarHTML(task, taskStatus);
 
         if (sidebarToggle === false) {
@@ -453,12 +498,37 @@ export const UI = (() => {
             }
         }
 
+        let xButton = document.getElementById("sidebar-x-button");
+
+        xButton.onclick = () => {
+            closeSidebar();
+        }
+
         (document.getElementById("delete-button")).onclick = () => {
             Project.deleteTask(displayedProject, sidebarTaskDisplayed);
             sidebarElement.classList.remove("task-sidebar-visible")
             sidebarElement.classList.add("task-sidebar-hidden")
             sidebarToggle = false;
             renderTasks(displayedProject)
+        }
+        (document.getElementById("side-title")).onchange = () => {
+            sidebarTaskDisplayed.title = (document.getElementById("side-title")).value;
+            console.log(sidebarTaskDisplayed)
+            renderTasks(displayedProject)
+            console.log(sidebarTaskDisplayed)
+        }
+        (document.getElementById("side-description")).onchange = () => {
+            console.log(document.getElementById("item-container").onclick)
+            sidebarTaskDisplayed.description = (document.getElementById("side-description")).value;
+            console.log(sidebarTaskDisplayed)
+            renderTasks(displayedProject)
+            console.log(sidebarToggle)
+            console.log(document.getElementById("item-container").onclick)
+        }
+        (document.getElementById("side-due-date")).onchange = () => {
+            sidebarTaskDisplayed.dueDate = moment((document.getElementById("side-due-date")).value).format("YYYY-MM-DD");
+            renderTasks(displayedProject)
+            console.log(sidebarTaskDisplayed)
         }
     }
 

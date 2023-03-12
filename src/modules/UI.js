@@ -6,6 +6,7 @@ export const UI = (() => {
     let displayedProject = Project.projectArray[0];
     let displayedTasks = Project.projectArray[0].taskArray;
     let sidebarToggle = false;
+    let sidebarTaskDisplayed = {};
     
     function renderModals() {
         let modalContainer = document.createElement("div");
@@ -297,8 +298,6 @@ export const UI = (() => {
             return
         };
 
-        console.log(project.taskArray);
-
         for (let i = 0; i < (project.taskArray).length; i++) {
             let taskItem = document.createElement("div");
             taskItem.classList.add("task-item")
@@ -347,19 +346,16 @@ export const UI = (() => {
                 }
                 if (project.taskArray[i].complete === true) {
                     project.taskArray[i].completedOn = moment();
-                    console.log(project.taskArray[i].completedOn)
                     taskItem.classList.add("task-complete")
                     Task.updateComplete(document.getElementById("checkbox" + i))
-                    console.log(project.taskArray[i])
                 } else {
                     taskItem.classList.remove("task-complete")
                     Task.updateComplete(document.getElementById("checkbox" + i))
                     project.taskArray[i].completedOn = moment("3000-12-25");
-                    console.log(project.taskArray[i])
                 };
-                setTimeout(renderTasks, 1100, displayedProject);
+                setTimeout(renderTasks, 1000, displayedProject);
             }
-
+            
             checkDiv.appendChild(completeCheck);
 
             taskItem.appendChild(checkDiv);
@@ -367,6 +363,11 @@ export const UI = (() => {
 
             itemContainer.appendChild(taskItem);
         }
+        if (sidebarToggle === true) {
+            taskSidebar.classList.remove("task-sidebar-hidden")
+            taskSidebar.classList.add("task-sidebar-visible")
+            setSidebarInfo(sidebarTaskDisplayed, taskSidebar)
+        };
         displayedTasks = project.taskArray;
         taskList.appendChild(itemContainer);
         highlightProject();
@@ -439,6 +440,7 @@ export const UI = (() => {
             sidebarElement.classList.remove("task-sidebar-hidden")
             sidebarElement.classList.add("task-sidebar-visible")
             sidebarToggle = !sidebarToggle;
+            sidebarTaskDisplayed = task;
         } else {
             sidebarElement.classList.remove("task-sidebar-visible")
             sidebarElement.classList.add("task-sidebar-hidden")
@@ -505,7 +507,6 @@ export const UI = (() => {
                 let taskDesc = document.getElementById("task-desc").value
                 let taskPrio = document.getElementById("task-prio").value
                 let taskDate = moment(document.getElementById("task-date").value).format("YYYY/M/D");
-                console.log(taskTitle, taskDesc, taskPrio, taskDate, displayedProject)
                 Task.createTask(taskTitle, taskDesc, taskPrio, taskDate, displayedProject);
                 sidebarToggle = false;
                 renderTasks(displayedProject);

@@ -9,7 +9,6 @@ export const Task = (() => {
 
     function createTask(taskName, taskDesc, taskDate, taskPrio, project) {
         const newTask = taskFactory(taskName, taskDesc, taskDate, taskPrio, false, moment("3000-12-25"));
-        console.log(project)
         project.taskArray.push(newTask);
     }
 

@@ -20,7 +20,7 @@ input[type=text]:focus {
     outline-width: 2px;
     outline-color: var(--sub);
     /* border: var(--main) 2px solid; */
-  }
+}
 
 input[type="checkbox"] {
     /* Add if not using autoprefixer */
@@ -66,6 +66,10 @@ input[type="color"]::-webkit-color-swatch {
 
 h1, h2, h3, h4, h5, h6, p, li, label, legend {
     font-family: Arial, Helvetica, sans-serif;
+
+    overflow: hidden;
+    white-space:nowrap;
+    text-overflow: ellipsis;
 }
 
 legend {
@@ -224,7 +228,11 @@ a:active {
 
 .project-text {
     margin-left: 40px;
-    font-size: 16px;
+    font-size: 18px;
+    overflow: hidden;
+    white-space:nowrap;
+    text-overflow: ellipsis;
+    max-width: 100%;
 }
 
 .item-container {
@@ -313,7 +321,7 @@ a:active {
 }
 
 .task-desc {
-    grid-area: 2 / 1 / 3 / 8;
+    grid-area: 2 / 1 / 3 / 7;
     display: flex;
     align-items: center;
 
@@ -366,13 +374,13 @@ a:active {
     border: var(--main) solid 0px;
     background-color: #606060;
     height: 76.61%;
-    width: 30%;
+    max-width: 340px;
 }
 
 .sidebar-info {
     display: grid;
 
-    width: 340px;
+    max-width: 340px;
     padding: 8px 30px;
 }
 
@@ -388,6 +396,29 @@ a:active {
     border: var(--main) solid 7px;
 
     transition: all .3s ease-in-out;
+}
+
+.side-title {
+    font-size: 38px;
+    margin: 10px 0px;
+    max-width: 22vw;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.desc-container {
+    min-height: 10vw;
+}
+
+.side-description {
+    max-width: 23vw;
+    display: -webkit-box;
+    -webkit-line-clamp: 6;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    white-space: normal;
+    text-overflow: ellipsis;
 }
 
 .delete-container {
@@ -626,4 +657,8 @@ a:active {
 .required {
     color:rgb(252, 104, 104);
     margin-left:2px;
+}
+
+.disable-click {
+    pointer-events: none;
 }

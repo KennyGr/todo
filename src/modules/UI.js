@@ -18,7 +18,7 @@ export const UI = (() => {
             <div class="project-x-button" id="project-x-button">&times;</div>
             <form class="create-project-form" id="create-project-form">
                 <legend>New Project</legend>
-                <label for="project-name">Project Name:</label>
+                <label for="project-name">Project Name<span class="required">*</span> :</label>
                 <input type="text" id="project-name" class="project-input" name="project-name" required>
             </form>
             <button id="create-project-button" class="create-project-button" type="button">Create</button>
@@ -28,7 +28,7 @@ export const UI = (() => {
             <form class="create-task-form" id="create-task-form">
                 <legend class="task-legend">New Task</legend>
                 <div class="task-modal-input">
-                    <label for="task-title">Title:</label>
+                    <label for="task-title">Title<span class="required">*</span> :</label>
                     <input class="task-input" type="text" id="task-title" name="task-title" required>
                 </div>
                 <div class="task-modal-input">
@@ -36,11 +36,11 @@ export const UI = (() => {
                     <textarea rows="4" cols="50" class="task-input-textarea" type="textarea" id="task-desc" name="task-desc"></textarea>
                 </div>
                 <div class="task-modal-input">
-                    <label for="task-prio">Priority:</label>
+                    <label for="task-prio">Priority<span class="required">*</span> :</label>
                     <input class="task-input" type="text" id="task-prio" name="task-prio" value="Low">
                 </div>
                 <div class="task-modal-input">
-                    <label for="task-date">Deadline:</label>
+                    <label for="task-date">Deadline<span class="required">*</span> :</label>
                     <input class="task-input" type="date" id="task-date" name="task-date" value="${moment().format("YYYY-MM-DD")}">
                 </div>
             </form>
@@ -58,22 +58,30 @@ export const UI = (() => {
             document.getElementById("create-project-button").click();
             }
         });
+
+        document.getElementById("task-modal").addEventListener("keypress", function(event) {
+            // If the user presses the "Enter" key on the keyboard
+            if (event.key === "Enter") {
+            // Cancel the default action, if needed
+            event.preventDefault();
+            // Trigger the button element with a click
+            document.getElementById("create-task-button").click();
+            }
+        });
     }
 
     function openModal(modal) {
         document.getElementById(modal).classList.add("visible")
         document.getElementById("modal-backdrop").classList.add("visible")
         document.getElementById("main-container").classList.add("blur")
-        // document.getElementById("header-container").classList.add("blur")
-        // document.getElementById("footer-container").classList.add("blur")
     }
 
     function closeModal(modal) {
         document.getElementById(modal).classList.remove("visible")
         document.getElementById("modal-backdrop").classList.remove("visible")
         document.getElementById("main-container").classList.remove("blur")
-        // document.getElementById("header-container").classList.remove("blur")
-        // document.getElementById("footer-container").classList.remove("blur")
+        document.getElementById("create-project-form").reset();
+        document.getElementById("create-task-form").reset();
     }
 
     function renderHeader() {
@@ -240,6 +248,7 @@ export const UI = (() => {
 
             projectList.appendChild(projectDiv)
         }
+        highlightProject();
     }
 
     function highlightProject() {
@@ -262,6 +271,11 @@ export const UI = (() => {
     };
 
     function renderTasks(project) {
+        (project.taskArray).sort(function(a, b) {
+                return (b.completedOn).diff(a.completedOn)
+            }
+        )
+        
         let taskList = document.getElementById("task-list");
         taskList.innerHTML = '';
 
@@ -283,10 +297,13 @@ export const UI = (() => {
             return
         };
 
+        console.log(project.taskArray);
+
         for (let i = 0; i < (project.taskArray).length; i++) {
             let taskItem = document.createElement("div");
             taskItem.classList.add("task-item")
             taskItem.name = "task-item"
+
             if (project.taskArray[i].complete === true) {
                 taskItem.classList.add("task-complete");
             };
@@ -329,12 +346,18 @@ export const UI = (() => {
                     }
                 }
                 if (project.taskArray[i].complete === true) {
+                    project.taskArray[i].completedOn = moment();
+                    console.log(project.taskArray[i].completedOn)
                     taskItem.classList.add("task-complete")
                     Task.updateComplete(document.getElementById("checkbox" + i))
+                    console.log(project.taskArray[i])
                 } else {
                     taskItem.classList.remove("task-complete")
                     Task.updateComplete(document.getElementById("checkbox" + i))
+                    project.taskArray[i].completedOn = moment("3000-12-25");
+                    console.log(project.taskArray[i])
                 };
+                setTimeout(renderTasks, 1100, displayedProject);
             }
 
             checkDiv.appendChild(completeCheck);
@@ -454,6 +477,7 @@ export const UI = (() => {
         let projectName = document.getElementById("project-name").value
         Project.createProject(projectName);
         renderProjects(Project.projectArray);
+        displayedProject = Project.projectArray[(Project.projectArray.length - 1)]
         renderTasks(Project.projectArray[(Project.projectArray.length - 1)])
         closeModal(projectModal);
     }

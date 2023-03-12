@@ -1,13 +1,14 @@
 import { Project } from "./Projects"
+var moment = require('moment');
 
 export const Task = (() => {
 
-    const taskFactory = (title, description, dueDate, priority, complete) => {
-        return { title, description, dueDate, priority, complete }
+    const taskFactory = (title, description, dueDate, priority, complete, completedOn) => {
+        return { title, description, dueDate, priority, complete, completedOn }
     };
 
     function createTask(taskName, taskDesc, taskDate, taskPrio, project) {
-        const newTask = taskFactory(taskName, taskDesc, taskDate, taskPrio, false);
+        const newTask = taskFactory(taskName, taskDesc, taskDate, taskPrio, false, moment("3000-12-25"));
         console.log(project)
         project.taskArray.push(newTask);
     }

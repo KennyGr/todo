@@ -622,3 +622,8 @@ a:active {
     margin-right: 40px;
     column-gap: 14px;
 }
+
+.required {
+    color:rgb(252, 104, 104);
+    margin-left:2px;
+}

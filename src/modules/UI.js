@@ -185,7 +185,7 @@ export const UI = (() => {
         let textColorCheck = hslLightValue.match(/(?<=,)[^,]+(?=%\))/);
 
         const root = document.querySelector(':root');
-        if (textColorCheck > (74) ) {
+        if (textColorCheck > (64) ) {
             root.style.setProperty('--text', "black");
         } else {
             root.style.setProperty('--text', "white");
@@ -456,6 +456,7 @@ export const UI = (() => {
                 let taskDate = moment(document.getElementById("task-date").value).format("YYYY/M/D");
                 console.log(taskTitle, taskDesc, taskPrio, taskDate, displayedProject)
                 Task.createTask(taskTitle, taskDesc, taskPrio, taskDate, displayedProject);
+                sidebarToggle = false;
                 renderTasks(displayedProject);
                 closeModal(taskModal);
             } else {

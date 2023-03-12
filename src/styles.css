@@ -389,9 +389,10 @@ a:active {
     bottom: 10%;
     margin: auto;
     z-index: 999;
-    height: 30%;
-    width: 50%;
+    height: 150px;
+    width: 600px;
     background-color: #2f2f2f;
+    border: var(--main) solid 5px;
     color: white;
     visibility: hidden;
 }
@@ -408,22 +409,46 @@ a:active {
 }
 
 .create-project-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+
     grid-area: 1 / 1 / 3 / 3;
-    font-size: 2rem;
-    padding: 18px 40px;
+
+    font-size: 1.3rem;
+    padding: 24px 40px;
 }
 
 .project-name {
     margin-top: 20px;
-    width: 60%;
-    height: 20%
+    width: 70%;
+    height: 20%;
+    font-size: 22px;
 }
 
 .create-project-button {
-    grid-area: 3 / 2 / 4 / 4;
+    grid-area: 2 / 2 / 3 / 4;
 
-    margin: 10px 0px;
-    max-width: 100%;
+    margin-top: 60px;
+    margin-left: 40px;
+    max-width: 60%;
+    height: 30px;
+
+    background-color: var(--main);
+    border: none;
+    color: var(--text);
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+.create-project-button:hover {
+    background-color: var(--sub);
+}
+
+.create-project-button:active {
+    transform: scale(0.98);
 }
 
 .task-modal {
@@ -457,6 +482,8 @@ a:active {
 .blur {
     filter: blur(1.8px);
     pointer-events: none;
+
+    transition: filter .2s ease-in-out;
 }
 
 .x-button {

@@ -17,24 +17,34 @@ export const UI = (() => {
         <div class="project-modal" id="project-modal">
             <div class="project-x-button" id="project-x-button">&times;</div>
             <form class="create-project-form" id="create-project-form">
+                <legend>New Project</legend>
                 <label for="project-name">Project Name:</label>
-                <input type="text" id="project-name" class="project-name" name="project-name" required>
+                <input type="text" id="project-name" class="project-input" name="project-name" required>
             </form>
             <button id="create-project-button" class="create-project-button" type="button">Create</button>
         </div>
         <div class="task-modal" id="task-modal">
             <div class="task-x-button" id="task-x-button">&times;</div>
             <form class="create-task-form" id="create-task-form">
-                <label for="task-title">Title:</label>
-                <input type="text" id="task-title" name="task-title" required>
-                <label for="task-desc">Description:</label>
-                <input type="text" id="task-desc" name="task-desc">
-                <label for="task-prio">Priority Name:</label>
-                <input type="text" id="task-prio" name="task-prio" value="Low">
-                <label for="task-date">Deadline:</label>
-                <input type="date" id="task-date" name="task-date" value="${moment().format("YYYY-MM-DD")}">
-                <button id="create-task-button" type="button">Create</button>
+                <legend class="task-legend">New Task</legend>
+                <div class="task-modal-input">
+                    <label for="task-title">Title:</label>
+                    <input class="task-input" type="text" id="task-title" name="task-title" required>
+                </div>
+                <div class="task-modal-input">
+                    <label for="task-desc">Description:</label>
+                    <textarea rows="4" cols="50" class="task-input-textarea" type="textarea" id="task-desc" name="task-desc"></textarea>
+                </div>
+                <div class="task-modal-input">
+                    <label for="task-prio">Priority:</label>
+                    <input class="task-input" type="text" id="task-prio" name="task-prio" value="Low">
+                </div>
+                <div class="task-modal-input">
+                    <label for="task-date">Deadline:</label>
+                    <input class="task-input" type="date" id="task-date" name="task-date" value="${moment().format("YYYY-MM-DD")}">
+                </div>
             </form>
+            <button id="create-task-button" class="create-task-button" type="button">Create</button>
         </div>
         <div class="modal-backdrop" id="modal-backdrop"></div>
         `

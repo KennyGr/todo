@@ -3,6 +3,7 @@
     --sub: #ffb8b7;
     --text: hsl(0, 0%, 0%);
     --main-height: 87vh;
+    --screen-width: (100vw);
   }
 
 body {
@@ -312,13 +313,13 @@ a:active {
 }
 
 .task-item-long {
-    width: 85%;
+    width: calc(0.69 * var(--screen-width));
     transition: width .25s ease-in-out;
 }
 
 .task-item-short {
+    width: calc((0.73 * var(--screen-width)) - 340px);
     transition: width .3s ease-in-out;
-    width: 50%;
 }
 
 .task-info-container {
@@ -419,14 +420,16 @@ a:active {
 }
 
 .task-sidebar-hidden {
-    width: 0px;
+    min-width: 0px;
+    max-width: 0px;
     border-left: var(--main) solid 0px;
 
     transition: all .25s ease-in-out;
 }
 
 .task-sidebar-visible {
-    width: 30%;
+    min-width: 340px;
+    max-width: 340px;
     border-left: var(--main) solid 7px;
 
     transition: all .3s ease-in-out;

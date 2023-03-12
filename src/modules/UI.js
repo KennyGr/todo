@@ -7,6 +7,13 @@ export const UI = (() => {
     let displayedTasks = Project.projectArray[0].taskArray;
     let sidebarToggle = false;
     let sidebarTaskDisplayed = {};
+    const root = document.querySelector(':root');
+
+    root.style.setProperty('--screen-width', window.innerWidth + "px");
+
+    window.addEventListener("resize", function() {
+        root.style.setProperty('--screen-width', window.innerWidth + "px");
+    })
     
     function renderModals() {
         let modalContainer = document.createElement("div");
@@ -231,7 +238,6 @@ export const UI = (() => {
 
         let textColorCheck = hslLightValue.match(/(?<=,)[^,]+(?=%\))/);
 
-        const root = document.querySelector(':root');
         if (textColorCheck > (64) ) {
             root.style.setProperty('--text', "black");
         } else {
@@ -334,6 +340,7 @@ export const UI = (() => {
             `
             taskInfo.onclick = (e) => {
                 e.stopPropagation();
+                console.log(window.innerWidth)
                 if ((sidebarToggle === true) && (project.taskArray[i].title !== document.getElementById("side-title").innerHTML)) {
                     setSidebarInfo(project.taskArray[i], taskSidebar, e);
                 } else {

@@ -305,11 +305,20 @@ a:active {
     border: var(--sub) solid 2px;
     border-radius: 10px;
     background-color: var(--sub);
-    width: 85%;
     height: 70px;
     opacity: 1;
     transition: opacity.4s linear;
     z-index: 6;
+}
+
+.task-item-long {
+    width: 85%;
+    transition: width .25s ease-in-out;
+}
+
+.task-item-short {
+    transition: width .3s ease-in-out;
+    width: 50%;
 }
 
 .task-info-container {
@@ -369,6 +378,10 @@ a:active {
     justify-content: center;
 }
 
+.checkbox-input {
+    margin: 10px;
+}
+
 .task-complete {
     opacity: .3;
     transition: opacity .5s linear;
@@ -390,7 +403,7 @@ a:active {
 
     border: var(--main) solid 0px;
     background-color: #606060;
-    height: 76.61%;
+    height: 78.29%;
     max-width: 340px;
 }
 
@@ -407,14 +420,14 @@ a:active {
 
 .task-sidebar-hidden {
     width: 0px;
-    border: #505050 solid 0px;
+    border-left: var(--main) solid 0px;
 
     transition: all .25s ease-in-out;
 }
 
 .task-sidebar-visible {
     width: 30%;
-    border: var(--main) solid 7px;
+    border-left: var(--main) solid 7px;
 
     transition: all .3s ease-in-out;
 }

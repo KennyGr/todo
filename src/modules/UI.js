@@ -89,6 +89,12 @@ export const UI = (() => {
         document.getElementById("task-sidebar").classList.remove("task-sidebar-visible")
         document.getElementById("task-sidebar").classList.add("task-sidebar-hidden")
         sidebarToggle = false;
+
+        let taskItems = document.querySelectorAll(".task-item");
+        taskItems.forEach((item) => {
+            item.classList.remove("task-item-short")
+            item.classList.add("task-item-long")
+        });
     }
 
     function renderHeader() {
@@ -311,7 +317,8 @@ export const UI = (() => {
 
         for (let i = 0; i < (project.taskArray).length; i++) {
             let taskItem = document.createElement("div");
-            taskItem.classList.add("task-item")
+            taskItem.classList.add("task-item", "task-item-long")
+            taskItem.id = "task-item"
             taskItem.name = "task-item"
 
             if (project.taskArray[i].complete === true) {
@@ -339,6 +346,7 @@ export const UI = (() => {
             checkDiv.classList.add("task-checkbox")
 
             let completeCheck = document.createElement("input")
+            completeCheck.classList.add("checkbox-input")
             completeCheck.id="checkbox" + i
             completeCheck.type = "checkbox"
             completeCheck.checked = project.taskArray[i].complete;
@@ -529,6 +537,14 @@ export const UI = (() => {
             sidebarTaskDisplayed.dueDate = moment((document.getElementById("side-due-date")).value).format("YYYY-MM-DD");
             renderTasks(displayedProject)
             console.log(sidebarTaskDisplayed)
+        }
+
+        if (sidebarToggle === true) {
+            let taskItems = document.querySelectorAll(".task-item");
+            taskItems.forEach((item) => {
+                item.classList.add("task-item-short")
+                item.classList.remove("task-item-long")
+              });
         }
     }
 

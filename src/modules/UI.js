@@ -479,6 +479,7 @@ export const UI = (() => {
         renderProjects(Project.projectArray);
         displayedProject = Project.projectArray[(Project.projectArray.length - 1)]
         renderTasks(Project.projectArray[(Project.projectArray.length - 1)])
+        sidebarToggle = false;
         closeModal(projectModal);
     }
 

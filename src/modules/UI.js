@@ -168,6 +168,19 @@ export const UI = (() => {
 
         document.getElementById('add-project-button').addEventListener('click', createProjectModal)
         document.getElementById('add-task-button').addEventListener('click', createTaskModal)
+
+        let dueTodayButton = document.getElementById('due-today');
+        dueTodayButton.onclick = () => {
+            renderToday();
+        }
+        let dueWeekButton = document.getElementById('due-week');
+        dueWeekButton.onclick = () => {
+            renderWeek();
+        }
+        let dueMonthButton = document.getElementById('due-month');
+        dueMonthButton.onclick = () => {
+            renderMonth();
+        }
     
        initTasks();
     }
@@ -263,7 +276,7 @@ export const UI = (() => {
             projectDiv.onclick = () => {
                 sidebarToggle = false;
                 displayedProject = projectArray[i]
-                renderTasks(projectArray[i]);
+                renderTasks((projectArray[i]).taskArray);
             };
             let individualProject = document.createElement("li");
             individualProject.innerHTML = projectArray[i].name;
@@ -290,12 +303,12 @@ export const UI = (() => {
     function initTasks() {
         if (Project.projectArray[0]) {
             let taskList = document.getElementById("task-list");
-            renderTasks(Project.projectArray[0]);
+            renderTasks(Project.projectArray[0].taskArray);
         }
     };
 
-    function renderTasks(project) {
-        (project.taskArray).sort(function(a, b) {
+    function renderTasks(projectArray) {
+        (projectArray).sort(function(a, b) {
                 return (b.completedOn).diff(a.completedOn)
             }
         )
@@ -318,7 +331,7 @@ export const UI = (() => {
         taskSidebar.classList.add("task-sidebar", "task-sidebar-hidden");
         taskListSection.appendChild(taskSidebar);
 
-        if (!project.taskArray[0]) {
+        if (!projectArray[0]) {
             let noTaskMessage = document.createElement("p");
             noTaskMessage.innerText = "No tasks yet!";
             noTaskMessage.classList.add("notask-message");
@@ -326,7 +339,7 @@ export const UI = (() => {
             return
         };
 
-        for (let i = 0; i < (project.taskArray).length; i++) {
+        for (let i = 0; i < (projectArray).length; i++) {
             let taskItem = document.createElement("div");
             taskItem.classList.add("task-item", taskItem.complete ? "task-complete-long" : "task-item-long")
             taskItem.id = "task-item"
@@ -341,24 +354,24 @@ export const UI = (() => {
                 }
             }
 
-            if (project.taskArray[i].complete === true) {
+            if (projectArray[i].complete === true) {
                 taskItem.classList.add("task-complete");
             };
             let taskInfo = document.createElement("div");
             taskInfo.classList.add("task-info-container");
             taskInfo.innerHTML = `
-            <div class="task-title" id="task-title"><p>${project.taskArray[i].title}</p></div>
-            <div class="task-desc" id="task-desc"><p>${project.taskArray[i].description}</p></div>
-            <div class="task-prio" id="task-prio"><p>${project.taskArray[i].priority}</p></div>
-            <div class="task-date" id="task-date"><p>${project.taskArray[i].dueDate}</p></div>
+            <div class="task-title" id="task-title"><p>${projectArray[i].title}</p></div>
+            <div class="task-desc" id="task-desc"><p>${projectArray[i].description}</p></div>
+            <div class="task-prio" id="task-prio"><p>${projectArray[i].priority}</p></div>
+            <div class="task-date" id="task-date"><p>${projectArray[i].dueDate}</p></div>
             `
             taskInfo.onclick = (e) => {
                 e.stopPropagation();
                 console.log(window.innerWidth)
-                if ((sidebarToggle === true) && (project.taskArray[i].title !== document.getElementById("side-title").innerHTML)) {
-                    setSidebarInfo(project.taskArray[i], taskSidebar, e);
+                if ((sidebarToggle === true) && (projectArray[i].title !== document.getElementById("side-title").innerHTML)) {
+                    setSidebarInfo(projectArray[i], taskSidebar, e);
                 } else {
-                    toggleTaskSidebar(project.taskArray[i], taskSidebar);
+                    toggleTaskSidebar(projectArray[i], taskSidebar);
                 }
             }
 
@@ -370,36 +383,36 @@ export const UI = (() => {
             completeCheck.classList.add("checkbox-input")
             completeCheck.id="checkbox" + i
             completeCheck.type = "checkbox"
-            completeCheck.checked = project.taskArray[i].complete;
+            completeCheck.checked = projectArray[i].complete;
             completeCheck.onchange = () => {
-                project.taskArray[i].complete;
+                projectArray[i].complete;
             }
 
             checkDiv.onclick = (e) => {
                 e.stopPropagation();
-                completeCheck.checked = !project.taskArray[i].complete;
-                project.taskArray[i].complete = !project.taskArray[i].complete
+                completeCheck.checked = !projectArray[i].complete;
+                projectArray[i].complete = !projectArray[i].complete
                 if (document.getElementById("side-title")) {
-                    if (project.taskArray[i].title === document.getElementById("side-title").innerHTML) {
-                        setSidebarInfo(project.taskArray[i], taskSidebar, e)
+                    if (projectArray[i].title === document.getElementById("side-title").innerHTML) {
+                        setSidebarInfo(projectArray[i], taskSidebar, e)
                     }
                 }
-                if (project.taskArray[i].complete === true) {
-                    project.taskArray[i].completedOn = moment();
+                if (projectArray[i].complete === true) {
+                    projectArray[i].completedOn = moment();
                     taskItem.classList.add("task-complete")
                     Task.updateComplete(document.getElementById("checkbox" + i))
                 } else {
                     taskItem.classList.remove("task-complete")
                     Task.updateComplete(document.getElementById("checkbox" + i))
-                    project.taskArray[i].completedOn = moment("3000-12-25");
+                    projectArray[i].completedOn = moment("3000-12-25");
                 };
                 document.getElementById("item-container").classList.add("disable-click")
-                if (project.taskArray.length !== 0) {
+                if (projectArray.length !== 0) {
                     setTimeout(function() {
                         document.getElementById("item-container").classList.remove("disable-click")
                     }, 800);
                     setTimeout(function() {
-                        renderTasks(displayedProject);
+                        renderTasks(displayedProject.taskArray);
                     }, 800);
                 }
             }
@@ -416,10 +429,43 @@ export const UI = (() => {
             taskSidebar.classList.add("task-sidebar-visible")
             setSidebarInfo(sidebarTaskDisplayed, taskSidebar)
         };
-        displayedTasks = project.taskArray;
+        displayedTasks = projectArray;
         taskList.appendChild(itemContainer);
         highlightProject();
     };
+
+    function renderToday() {
+        let todayTaskArray = [];
+        let taskArray = displayedProject.taskArray
+        for (let i = 0; i < taskArray.length; i++) {
+            if (taskArray[i].dueDate === moment().format("YYYY-M-DD")) {
+                todayTaskArray.push(taskArray[i])
+            }
+        }
+        renderTasks(todayTaskArray)
+    }
+
+    function renderWeek() {
+        let weekTaskArray = [];
+        let taskArray = displayedProject.taskArray
+        for (let i = 0; i < taskArray.length; i++) {
+            if ((moment().isBefore(taskArray[i].dueDate) || moment().isSame(taskArray[i].dueDate, "day")) && moment().diff(taskArray[i].dueDate, "days") > -7) {
+                weekTaskArray.push(taskArray[i])
+            }
+        }
+        renderTasks(weekTaskArray)
+    }
+
+    function renderMonth() {
+        let monthTaskArray = [];
+        let taskArray = displayedProject.taskArray
+        for (let i = 0; i < taskArray.length; i++) {
+            if ((moment().isSame(taskArray[i].dueDate, "month"))) {
+                monthTaskArray.push(taskArray[i])
+            }
+        }
+        renderTasks(monthTaskArray)
+    }
 
     function sidebarHTML(task, taskStatus) {
         return `
@@ -481,24 +527,24 @@ export const UI = (() => {
             sidebarElement.classList.remove("task-sidebar-visible")
             sidebarElement.classList.add("task-sidebar-hidden")
             sidebarToggle = false;
-            renderTasks(displayedProject)
+            renderTasks(displayedProject.taskArray)
         }
 
         (document.getElementById("side-title")).onchange = () => {
             sidebarTaskDisplayed.title = (document.getElementById("side-title")).value;
             console.log(sidebarTaskDisplayed)
-            renderTasks(displayedProject)
+            renderTasks(displayedProject.taskArray)
             console.log(sidebarTaskDisplayed)
         }
         (document.getElementById("side-description")).onchange = () => {
             sidebarTaskDisplayed.description = (document.getElementById("side-description")).value;
             console.log(sidebarTaskDisplayed)
-            renderTasks(displayedProject)
+            renderTasks(displayedProject.taskArray)
             console.log(sidebarToggle)
         }
         (document.getElementById("side-due-date")).onchange = () => {
             sidebarTaskDisplayed.dueDate = moment((document.getElementById("side-due-date")).value).format("YYYY-MM-DD");
-            renderTasks(displayedProject)
+            renderTasks(displayedProject.taskArray)
             console.log(sidebarTaskDisplayed)
         }
     }
@@ -543,25 +589,25 @@ export const UI = (() => {
             sidebarElement.classList.remove("task-sidebar-visible")
             sidebarElement.classList.add("task-sidebar-hidden")
             sidebarToggle = false;
-            renderTasks(displayedProject)
+            renderTasks(displayedProject.taskArray)
         }
         (document.getElementById("side-title")).onchange = () => {
             sidebarTaskDisplayed.title = (document.getElementById("side-title")).value;
             console.log(sidebarTaskDisplayed)
-            renderTasks(displayedProject)
+            renderTasks(displayedProject.taskArray)
             console.log(sidebarTaskDisplayed)
         }
         (document.getElementById("side-description")).onchange = () => {
             console.log(document.getElementById("item-container").onclick)
             sidebarTaskDisplayed.description = (document.getElementById("side-description")).value;
             console.log(sidebarTaskDisplayed)
-            renderTasks(displayedProject)
+            renderTasks(displayedProject.taskArray)
             console.log(sidebarToggle)
             console.log(document.getElementById("item-container").onclick)
         }
         (document.getElementById("side-due-date")).onchange = () => {
             sidebarTaskDisplayed.dueDate = moment((document.getElementById("side-due-date")).value).format("YYYY-MM-DD");
-            renderTasks(displayedProject)
+            renderTasks(displayedProject.taskArray)
             console.log(sidebarTaskDisplayed)
         }
 
@@ -609,7 +655,7 @@ export const UI = (() => {
         Project.createProject(projectName);
         renderProjects(Project.projectArray);
         displayedProject = Project.projectArray[(Project.projectArray.length - 1)]
-        renderTasks(Project.projectArray[(Project.projectArray.length - 1)])
+        renderTasks((Project.projectArray[(Project.projectArray.length - 1)]).taskArray)
         sidebarToggle = false;
         closeModal(projectModal);
     }
@@ -638,7 +684,7 @@ export const UI = (() => {
                 let taskDate = moment(document.getElementById("task-date").value).format("YYYY/M/D");
                 Task.createTask(taskTitle, taskDesc, taskPrio, taskDate, displayedProject);
                 sidebarToggle = false;
-                renderTasks(displayedProject);
+                renderTasks(displayedProject.taskArray);
                 closeModal(taskModal);
             } else {
                 document.getElementById("create-task-form")[0].reportValidity();

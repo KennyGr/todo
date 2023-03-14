@@ -39,7 +39,7 @@ export const Project = (() => {
             {
                 title: "Sleep",
                 description: "ZZZzzzz",
-                dueDate: moment().format("YYYY-M-D"),
+                dueDate: moment().add(1, "days").format("YYYY-M-D"),
                 priority: "highest", 
                 complete: false,
                 completedOn: moment("3000-12-25")

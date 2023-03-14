@@ -288,7 +288,7 @@ a:active {
 
 .task-item {
     display: grid;
-    grid-template: 100% / 6% 94%;
+    grid-template: 100% / 46px auto 20px;
 
     margin: 15px 40px;
     border: var(--sub) solid 2px;
@@ -311,7 +311,7 @@ a:active {
 }
 
 .task-info-container {
-    grid-area: 1 / 2 / -1 / -1;
+    grid-area: 1 / 2 / -1 / 3;
 
     display: grid;
     grid-template: 50% 50% / 20px repeat(7, 1fr);
@@ -440,19 +440,13 @@ a:active {
     background-color: #929292;
     font-size: 28px;
     margin: 10px 0px;
-    max-width: 90%;
+    max-width: 85%;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    border: none;
-}
-
-.side-title:hover {
-    border: none;
-}
-
-.side-title:focus {
-    outline: none;
+    border: 1px solid black; 
+    border-radius: 12px;
+    padding: 6px;
 }
 
 .desc-container {
@@ -461,13 +455,15 @@ a:active {
 }
 
 .side-description {
-    max-width: 91.5%;
+    max-width: 89.9%;
     overflow: hidden;
     white-space: normal;
     text-overflow: ellipsis;
     background-color: #929292;
     min-height: 10vw;
-    border: none;
+    border: 1px solid black; 
+    border-radius: 12px;
+    padding: 6px;
     overflow: auto;
     outline: none;
     cursor: pointer;
@@ -490,6 +486,9 @@ a:active {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    border: 1px solid black;
+    border-radius: 12px;
+    padding: 6px;
 
     margin-left: 10px;
 }
@@ -781,6 +780,7 @@ a:active {
 
 .due {
     border: #505050 2px solid;
+    border-radius: 12px;
     display: flex;
     justify-content: center;
     align-items: center;

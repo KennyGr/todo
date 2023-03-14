@@ -469,6 +469,11 @@ export const UI = (() => {
             sidebarElement.innerHTML= sidebarHTML(task, taskStatus);
         };
 
+        let xButton = document.getElementById("sidebar-x-button");
+        xButton.onclick = () => {
+            closeSidebar();
+        }
+
         sidebarTaskDisplayed = task;
 
         (document.getElementById("delete-button")).onclick = () => {

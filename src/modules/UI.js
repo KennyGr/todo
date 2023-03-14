@@ -510,6 +510,7 @@ export const UI = (() => {
                     monthTaskArray.push(taskArray[i])
                 }
             }
+            document.getElementById("due-month").classList.add("due-selected");
             renderTasks(monthTaskArray)
         } else {
             document.getElementById("due-month").classList.remove("due-selected");
@@ -580,17 +581,27 @@ export const UI = (() => {
             renderTasks(displayedProject.taskArray)
         }
 
-        (document.getElementById("side-title")).onchange = () => {
-            sidebarTaskDisplayed.title = (document.getElementById("side-title")).value;
-            console.log(sidebarTaskDisplayed)
+        (document.getElementById("side-title")).oninput = (e) => {
+            let originalText = sidebarTaskDisplayed.title;
+            let newText = e.target.value;
+            let difIndex = (findFirstDiffPos(originalText, newText) + 1)
+
+            sidebarTaskDisplayed.title = newText;
             renderTasks(displayedProject.taskArray)
-            console.log(sidebarTaskDisplayed)
+            document.getElementById("side-title").focus()
+            document.getElementById("side-title").setSelectionRange(difIndex, difIndex, "forward");
+            document.getElementById("side-title").value = newText;
         }
-        (document.getElementById("side-description")).onchange = () => {
-            sidebarTaskDisplayed.description = (document.getElementById("side-description")).value;
-            console.log(sidebarTaskDisplayed)
+        (document.getElementById("side-description")).oninput = (e) => {
+            let originalText = sidebarTaskDisplayed.description;
+            let newText = e.target.value;
+            let difIndex = (findFirstDiffPos(originalText, newText) + 1)
+
+            sidebarTaskDisplayed.description = newText;
             renderTasks(displayedProject.taskArray)
-            console.log(sidebarToggle)
+            document.getElementById("side-description").focus()
+            document.getElementById("side-description").setSelectionRange(difIndex, difIndex, "forward");
+            document.getElementById("side-description").value = newText;
         }
         (document.getElementById("side-due-date")).onchange = () => {
             sidebarTaskDisplayed.dueDate = moment((document.getElementById("side-due-date")).value).format("YYYY-MM-DD");
@@ -641,19 +652,27 @@ export const UI = (() => {
             sidebarToggle = false;
             renderTasks(displayedProject.taskArray)
         }
-        (document.getElementById("side-title")).onchange = () => {
-            sidebarTaskDisplayed.title = (document.getElementById("side-title")).value;
-            console.log(sidebarTaskDisplayed)
+        (document.getElementById("side-title")).oninput = (e) => {
+            let originalText = sidebarTaskDisplayed.title;
+            let newText = e.target.value;
+            let difIndex = (findFirstDiffPos(originalText, newText) + 1)
+
+            sidebarTaskDisplayed.title = newText;
             renderTasks(displayedProject.taskArray)
-            console.log(sidebarTaskDisplayed)
+            document.getElementById("side-title").focus()
+            document.getElementById("side-title").setSelectionRange(difIndex, difIndex, "forward");
+            document.getElementById("side-title").value = newText;
         }
-        (document.getElementById("side-description")).onchange = () => {
-            console.log(document.getElementById("item-container").onclick)
-            sidebarTaskDisplayed.description = (document.getElementById("side-description")).value;
-            console.log(sidebarTaskDisplayed)
+        (document.getElementById("side-description")).oninput = (e) => {
+            let originalText = sidebarTaskDisplayed.description;
+            let newText = e.target.value;
+            let difIndex = (findFirstDiffPos(originalText, newText) + 1)
+
+            sidebarTaskDisplayed.description = newText;
             renderTasks(displayedProject.taskArray)
-            console.log(sidebarToggle)
-            console.log(document.getElementById("item-container").onclick)
+            document.getElementById("side-description").focus()
+            document.getElementById("side-description").setSelectionRange(difIndex, difIndex, "forward");
+            document.getElementById("side-description").value = newText;
         }
         (document.getElementById("side-due-date")).onchange = () => {
             sidebarTaskDisplayed.dueDate = moment((document.getElementById("side-due-date")).value).format("YYYY-MM-DD");
@@ -674,6 +693,13 @@ export const UI = (() => {
               });
         }
     }
+
+    function findFirstDiffPos(a, b) {
+        var i = 0;
+        if (a === b) return -1;
+        while (a[i] === b[i]) i++;
+        return i;
+      }
 
     function createProjectModal() {
         let projectModal = document.getElementById("project-modal").className;

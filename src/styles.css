@@ -793,10 +793,6 @@ a:active {
     font-size: 14spx;
 }
 
-.due:hover {
-    background-color: #727272;
-}
-
 .due-selected {
     background-color: #727272;
 }

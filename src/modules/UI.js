@@ -99,8 +99,13 @@ export const UI = (() => {
 
         let taskItems = document.querySelectorAll(".task-item");
         taskItems.forEach((item) => {
-            item.classList.remove("task-item-short")
-            item.classList.add("task-item-long")
+            if (item.classList.contains("task-complete")) {
+                item.classList.remove("task-complete-short")
+                item.classList.add("task-complete-long")
+            } else {
+                item.classList.remove("task-item-short")
+                item.classList.add("task-item-long")
+            }
         });
     }
 
@@ -145,13 +150,13 @@ export const UI = (() => {
                     </svg>
                 </div>
                 <div class="select-date">
-                    <p class="due-today" id="due-today">
+                    <p class="due " id="due-today">
                     Today
                     </p>
-                    <p class="due-today" id="due-today">
+                    <p class="due" id="due-week">
                     This Week
                     </p>
-                    <p class="due-today" id="due-today">
+                    <p class="due" id="due-month">
                     This Month
                     </p>
                 </div>
@@ -323,9 +328,18 @@ export const UI = (() => {
 
         for (let i = 0; i < (project.taskArray).length; i++) {
             let taskItem = document.createElement("div");
-            taskItem.classList.add("task-item", "task-item-long")
+            taskItem.classList.add("task-item", taskItem.complete ? "task-complete-long" : "task-item-long")
             taskItem.id = "task-item"
             taskItem.name = "task-item"
+            if (sidebarToggle === true) {
+                if (taskItem.complete === true) {
+                    taskItem.classList.remove("task-complete-long");
+                    taskItem.classList.add("task-complete-short");
+                } else {
+                    taskItem.classList.remove("task-item-long");
+                    taskItem.classList.add("task-item-short");
+                }
+            }
 
             if (project.taskArray[i].complete === true) {
                 taskItem.classList.add("task-complete");
@@ -333,7 +347,7 @@ export const UI = (() => {
             let taskInfo = document.createElement("div");
             taskInfo.classList.add("task-info-container");
             taskInfo.innerHTML = `
-            <div class="task-name" id="task-name"><p>${project.taskArray[i].title}</p></div>
+            <div class="task-title" id="task-title"><p>${project.taskArray[i].title}</p></div>
             <div class="task-desc" id="task-desc"><p>${project.taskArray[i].description}</p></div>
             <div class="task-prio" id="task-prio"><p>${project.taskArray[i].priority}</p></div>
             <div class="task-date" id="task-date"><p>${project.taskArray[i].dueDate}</p></div>
@@ -549,8 +563,13 @@ export const UI = (() => {
         if (sidebarToggle === true) {
             let taskItems = document.querySelectorAll(".task-item");
             taskItems.forEach((item) => {
-                item.classList.add("task-item-short")
-                item.classList.remove("task-item-long")
+                if (item.classList.contains("task-complete")) {
+                    item.classList.add("task-complete-short")
+                    item.classList.remove("task-complete-long")
+                } else {
+                    item.classList.add("task-item-short")
+                    item.classList.remove("task-item-long")
+                }
               });
         }
     }

@@ -4,10 +4,12 @@ var moment = require('moment');
 
 export const UI = (() => {
     let displayedProject = Project.projectArray[0];
-    let displayedTasks = Project.projectArray[0].taskArray;
     let sidebarToggle = false;
     let sidebarTaskDisplayed = {};
     const root = document.querySelector(':root');
+    let todayFilter = false;
+    let weekFilter = false;
+    let monthFilter = false;
 
     root.style.setProperty('--screen-width', window.innerWidth + "px");
 
@@ -171,14 +173,18 @@ export const UI = (() => {
 
         let dueTodayButton = document.getElementById('due-today');
         dueTodayButton.onclick = () => {
+            todayFilterToggle();
             renderToday();
+            console.log(todayFilter)
         }
         let dueWeekButton = document.getElementById('due-week');
         dueWeekButton.onclick = () => {
+            weekFilterToggle();
             renderWeek();
         }
         let dueMonthButton = document.getElementById('due-month');
         dueMonthButton.onclick = () => {
+            monthFilterToggle()
             renderMonth();
         }
     
@@ -291,7 +297,7 @@ export const UI = (() => {
     function highlightProject() {
         for (let projectNumber in Project.projectArray) {
             if (document.getElementById("project" + projectNumber)) {
-                if (Project.projectArray[projectNumber].taskArray === displayedTasks) {
+                if (Project.projectArray[projectNumber].taskArray === displayedProject.taskArray) {
                     document.getElementById("project" + projectNumber).classList.add("selected-project");
                 } else {
                     document.getElementById("project" + projectNumber).classList.remove("selected-project");
@@ -307,8 +313,12 @@ export const UI = (() => {
         }
     };
 
-    function renderTasks(projectArray) {
-        (projectArray).sort(function(a, b) {
+    function renderTasks2() {
+
+    }
+
+    function renderTasks(taskArray) {
+        (taskArray).sort(function(a, b) {
                 return (b.completedOn).diff(a.completedOn)
             }
         )
@@ -331,7 +341,7 @@ export const UI = (() => {
         taskSidebar.classList.add("task-sidebar", "task-sidebar-hidden");
         taskListSection.appendChild(taskSidebar);
 
-        if (!projectArray[0]) {
+        if (!taskArray[0]) {
             let noTaskMessage = document.createElement("p");
             noTaskMessage.innerText = "No tasks yet!";
             noTaskMessage.classList.add("notask-message");
@@ -339,7 +349,7 @@ export const UI = (() => {
             return
         };
 
-        for (let i = 0; i < (projectArray).length; i++) {
+        for (let i = 0; i < (taskArray).length; i++) {
             let taskItem = document.createElement("div");
             taskItem.classList.add("task-item", taskItem.complete ? "task-complete-long" : "task-item-long")
             taskItem.id = "task-item"
@@ -354,24 +364,24 @@ export const UI = (() => {
                 }
             }
 
-            if (projectArray[i].complete === true) {
+            if (taskArray[i].complete === true) {
                 taskItem.classList.add("task-complete");
             };
             let taskInfo = document.createElement("div");
             taskInfo.classList.add("task-info-container");
             taskInfo.innerHTML = `
-            <div class="task-title" id="task-title"><p>${projectArray[i].title}</p></div>
-            <div class="task-desc" id="task-desc"><p>${projectArray[i].description}</p></div>
-            <div class="task-prio" id="task-prio"><p>${projectArray[i].priority}</p></div>
-            <div class="task-date" id="task-date"><p>${projectArray[i].dueDate}</p></div>
+            <div class="task-title" id="task-title"><p>${taskArray[i].title}</p></div>
+            <div class="task-desc" id="task-desc"><p>${taskArray[i].description}</p></div>
+            <div class="task-prio" id="task-prio"><p>${taskArray[i].priority}</p></div>
+            <div class="task-date" id="task-date"><p>${taskArray[i].dueDate}</p></div>
             `
             taskInfo.onclick = (e) => {
                 e.stopPropagation();
                 console.log(window.innerWidth)
-                if ((sidebarToggle === true) && (projectArray[i].title !== document.getElementById("side-title").innerHTML)) {
-                    setSidebarInfo(projectArray[i], taskSidebar, e);
+                if ((sidebarToggle === true) && (taskArray[i].title !== document.getElementById("side-title").innerHTML)) {
+                    setSidebarInfo(taskArray[i], taskSidebar, e);
                 } else {
-                    toggleTaskSidebar(projectArray[i], taskSidebar);
+                    toggleTaskSidebar(taskArray[i], taskSidebar);
                 }
             }
 
@@ -383,31 +393,31 @@ export const UI = (() => {
             completeCheck.classList.add("checkbox-input")
             completeCheck.id="checkbox" + i
             completeCheck.type = "checkbox"
-            completeCheck.checked = projectArray[i].complete;
+            completeCheck.checked = taskArray[i].complete;
             completeCheck.onchange = () => {
-                projectArray[i].complete;
+                taskArray[i].complete;
             }
 
             checkDiv.onclick = (e) => {
                 e.stopPropagation();
-                completeCheck.checked = !projectArray[i].complete;
-                projectArray[i].complete = !projectArray[i].complete
+                completeCheck.checked = !taskArray[i].complete;
+                taskArray[i].complete = !taskArray[i].complete
                 if (document.getElementById("side-title")) {
-                    if (projectArray[i].title === document.getElementById("side-title").innerHTML) {
-                        setSidebarInfo(projectArray[i], taskSidebar, e)
+                    if (taskArray[i].title === document.getElementById("side-title").innerHTML) {
+                        setSidebarInfo(taskArray[i], taskSidebar, e)
                     }
                 }
-                if (projectArray[i].complete === true) {
-                    projectArray[i].completedOn = moment();
+                if (taskArray[i].complete === true) {
+                    taskArray[i].completedOn = moment();
                     taskItem.classList.add("task-complete")
                     Task.updateComplete(document.getElementById("checkbox" + i))
                 } else {
                     taskItem.classList.remove("task-complete")
                     Task.updateComplete(document.getElementById("checkbox" + i))
-                    projectArray[i].completedOn = moment("3000-12-25");
+                    taskArray[i].completedOn = moment("3000-12-25");
                 };
                 document.getElementById("item-container").classList.add("disable-click")
-                if (projectArray.length !== 0) {
+                if (taskArray.length !== 0) {
                     setTimeout(function() {
                         document.getElementById("item-container").classList.remove("disable-click")
                     }, 800);
@@ -429,42 +439,82 @@ export const UI = (() => {
             taskSidebar.classList.add("task-sidebar-visible")
             setSidebarInfo(sidebarTaskDisplayed, taskSidebar)
         };
-        displayedTasks = projectArray;
         taskList.appendChild(itemContainer);
         highlightProject();
     };
 
+    function todayFilterToggle() {
+        weekFilter = false;
+        monthFilter = false;
+        todayFilter = !todayFilter;
+        document.getElementById("due-week").classList.remove("due-selected");
+        document.getElementById("due-month").classList.remove("due-selected");
+    }
+
     function renderToday() {
-        let todayTaskArray = [];
-        let taskArray = displayedProject.taskArray
-        for (let i = 0; i < taskArray.length; i++) {
-            if (taskArray[i].dueDate === moment().format("YYYY-M-DD")) {
-                todayTaskArray.push(taskArray[i])
+        if (todayFilter === true) {
+            let todayTaskArray = [];
+            let taskArray = displayedProject.taskArray
+            for (let i = 0; i < taskArray.length; i++) {
+                if (taskArray[i].dueDate === moment().format("YYYY-M-DD")) {
+                    todayTaskArray.push(taskArray[i])
+                }
             }
+            document.getElementById("due-today").classList.add("due-selected");
+            renderTasks(todayTaskArray)
+        } else {
+            document.getElementById("due-today").classList.remove("due-selected");
+            renderTasks(displayedProject.taskArray);
         }
-        renderTasks(todayTaskArray)
+    }
+
+    function weekFilterToggle() {
+        todayFilter = false;
+        monthFilter = false;
+        weekFilter = !weekFilter;
+        document.getElementById("due-today").classList.remove("due-selected");
+        document.getElementById("due-month").classList.remove("due-selected");
     }
 
     function renderWeek() {
-        let weekTaskArray = [];
-        let taskArray = displayedProject.taskArray
-        for (let i = 0; i < taskArray.length; i++) {
-            if ((moment().isBefore(taskArray[i].dueDate) || moment().isSame(taskArray[i].dueDate, "day")) && moment().diff(taskArray[i].dueDate, "days") > -7) {
-                weekTaskArray.push(taskArray[i])
+        if (weekFilter === true) {
+            let weekTaskArray = [];
+            let taskArray = displayedProject.taskArray
+            for (let i = 0; i < taskArray.length; i++) {
+                if ((moment().isBefore(taskArray[i].dueDate) || moment().isSame(taskArray[i].dueDate, "day")) && moment().diff(taskArray[i].dueDate, "days") > -7) {
+                    weekTaskArray.push(taskArray[i])
+                }
             }
+            document.getElementById("due-week").classList.add("due-selected");
+            renderTasks(weekTaskArray)
+        } else {
+            document.getElementById("due-week").classList.remove("due-selected");
+            renderTasks(displayedProject.taskArray);
         }
-        renderTasks(weekTaskArray)
+    }
+
+    function monthFilterToggle() {
+        todayFilter = false;
+        weekFilter = false;
+        monthFilter = !monthFilter
+        document.getElementById("due-today").classList.remove("due-selected");
+        document.getElementById("due-week").classList.remove("due-selected");
     }
 
     function renderMonth() {
-        let monthTaskArray = [];
-        let taskArray = displayedProject.taskArray
-        for (let i = 0; i < taskArray.length; i++) {
-            if ((moment().isSame(taskArray[i].dueDate, "month"))) {
-                monthTaskArray.push(taskArray[i])
+        if (monthFilter === true) {
+            let monthTaskArray = [];
+            let taskArray = displayedProject.taskArray
+            for (let i = 0; i < taskArray.length; i++) {
+                if ((moment().isSame(taskArray[i].dueDate, "month"))) {
+                    monthTaskArray.push(taskArray[i])
+                }
             }
+            renderTasks(monthTaskArray)
+        } else {
+            document.getElementById("due-month").classList.remove("due-selected");
+            renderTasks(displayedProject.taskArray);
         }
-        renderTasks(monthTaskArray)
     }
 
     function sidebarHTML(task, taskStatus) {

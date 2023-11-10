@@ -757,7 +757,15 @@ export const UI = (() => {
                 let taskDate = moment(document.getElementById("task-date").value).format("YYYY/MM/DD");
                 Task.createTask(taskTitle, taskDesc, taskPrio, taskDate, displayedProject);
                 sidebarToggle = false;
-                renderTasks(displayedProject.taskArray);
+                if (todayFilter === true) {
+                    renderToday();
+                } else if (weekFilter === true) {
+                    renderWeek();
+                } else if (monthFilter === true) {
+                    renderMonth();
+                } else {
+                    renderTasks(displayedProject.taskArray);
+                }
                 closeModal(taskModal);
             } else {
                 document.getElementById("create-task-form")[0].reportValidity();

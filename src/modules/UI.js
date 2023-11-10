@@ -449,7 +449,7 @@ export const UI = (() => {
             let todayTaskArray = [];
             let taskArray = displayedProject.taskArray
             for (let i = 0; i < taskArray.length; i++) {
-                if (taskArray[i].dueDate === moment().format("YYYY-M-DD")) {
+                if (moment(taskArray[i].dueDate).format("YYYY-M-DD") === moment().format("YYYY-M-DD")) {
                     todayTaskArray.push(taskArray[i])
                 }
             }

@@ -364,11 +364,16 @@ export const UI = (() => {
             let taskInfo = document.createElement("div");
             taskInfo.classList.add("task-info-container");
             taskInfo.innerHTML = `
-            <div class="task-title" id="task-title"><p>${taskArray[i].title}</p></div>
-            <div class="task-desc" id="task-desc"><p>${taskArray[i].description}</p></div>
-            <div class="task-prio" id="task-prio"><p>${taskArray[i].priority}</p></div>
-            <div class="task-date" id="task-date"><p>${taskArray[i].dueDate}</p></div>
-            `
+                <div class="task-desc" id="task-desc"><p>${taskArray[i].description}</p></div>
+                <div class="task-prio" id="task-prio"><p>${taskArray[i].priority}</p></div>
+                <div class="task-date" id="task-date"><p>${taskArray[i].dueDate}</p></div>
+                `
+            if (taskArray[i].description === "") {
+                taskInfo.innerHTML = `<div class="task-nodesc-title" id="task-title"><p>${taskArray[i].title}</p></div>` + taskInfo.innerHTML;
+            } else {
+                taskInfo.innerHTML = `<div class="task-title" id="task-title"><p>${taskArray[i].title}</p></div>` + taskInfo.innerHTML;
+            }
+
             taskInfo.onclick = (e) => {
                 e.stopPropagation();
                 console.log(window.innerWidth)

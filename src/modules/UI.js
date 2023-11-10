@@ -283,6 +283,10 @@ export const UI = (() => {
                 sidebarToggle = false;
                 displayedProject = projectArray[i]
                 renderTasks((projectArray[i]).taskArray);
+                for (let j = 0; j < projectArray.length; j++) {
+                    document.getElementById("project" + j).classList.remove("selected-project");
+                }
+                document.getElementById("project" + i).classList.add("selected-project");
             };
             let individualProject = document.createElement("li");
             individualProject.innerHTML = projectArray[i].name;
@@ -290,21 +294,11 @@ export const UI = (() => {
             projectDiv.appendChild(individualProject);
 
             projectList.appendChild(projectDiv)
-        }
-        highlightProject();
-    }
-
-    function highlightProject() {
-        for (let projectNumber in Project.projectArray) {
-            if (document.getElementById("project" + projectNumber)) {
-                if (Project.projectArray[projectNumber].taskArray === displayedProject.taskArray) {
-                    document.getElementById("project" + projectNumber).classList.add("selected-project");
-                } else {
-                    document.getElementById("project" + projectNumber).classList.remove("selected-project");
-                }
+            if (projectArray[i].newProjectScreen === true) {
+                document.getElementById("project" + i).classList.add("selected-project");
             }
         }
-    };
+    }
 
     function initTasks() {
         if (Project.projectArray[0]) {
@@ -440,7 +434,6 @@ export const UI = (() => {
             setSidebarInfo(sidebarTaskDisplayed, taskSidebar)
         };
         taskList.appendChild(itemContainer);
-        highlightProject();
     };
 
     function todayFilterToggle() {
@@ -727,8 +720,12 @@ export const UI = (() => {
     };
 
     function createProjectItem(projectModal) {
+        for (let i = 0; i < Project.projectArray.length; i++) {
+            Project.projectArray[i].newProjectScreen = false;
+        }
         let projectName = document.getElementById("project-name").value
         Project.createProject(projectName);
+        Project.projectArray[(Project.projectArray.length - 1)].newProjectScreen = true;
         renderProjects(Project.projectArray);
         displayedProject = Project.projectArray[(Project.projectArray.length - 1)]
         renderTasks((Project.projectArray[(Project.projectArray.length - 1)]).taskArray)
@@ -757,7 +754,7 @@ export const UI = (() => {
                 let taskTitle = document.getElementById("task-title").value
                 let taskDesc = document.getElementById("task-desc").value
                 let taskPrio = document.getElementById("task-prio").value
-                let taskDate = moment(document.getElementById("task-date").value).format("YYYY/M/D");
+                let taskDate = moment(document.getElementById("task-date").value).format("YYYY/MM/DD");
                 Task.createTask(taskTitle, taskDesc, taskPrio, taskDate, displayedProject);
                 sidebarToggle = false;
                 renderTasks(displayedProject.taskArray);

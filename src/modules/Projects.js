@@ -7,15 +7,15 @@ export const Project = (() => {
             {
                 title: "Do Work", 
                 description: "Gotta get that money", 
-                dueDate: moment().format("YYYY-M-D"), 
+                dueDate: moment().format("YYYY-MM-DD"), 
                 priority: "high", 
                 complete: false, 
-                completedOn: moment("3000-12-25")
+                completedOn: moment("3000-12-25"),
             }, 
             {
                 title: "Team Meeting",
                 description: "Rick will give a nice little presentation",
-                dueDate: moment("2023-04-15").format("YYYY-M-D"),
+                dueDate: moment("2023-04-15").format("YYYY-MM-DD"),
                 priority: "low", 
                 complete: false,
                 completedOn: moment("3000-12-25")
@@ -23,7 +23,7 @@ export const Project = (() => {
             {
                 title: "Christmas Party",
                 description: "Christmas themed attire required",
-                dueDate: moment("2023-12-23").format("YYYY-M-D"),
+                dueDate: moment("2023-12-23").format("YYYY-MM-DD"),
                 priority: "mid", 
                 complete: false,
                 completedOn: moment("3000-12-25")
@@ -31,7 +31,7 @@ export const Project = (() => {
             {
                 title: "Make To-Do List Tool",
                 description: "Really need this to increase productivity",
-                dueDate: moment("2023-03-29").format("YYYY-M-D"),
+                dueDate: moment("2023-03-29").format("YYYY-MM-DD"),
                 priority: "highest", 
                 complete: false,
                 completedOn: moment("3000-12-25")
@@ -39,12 +39,13 @@ export const Project = (() => {
             {
                 title: "Sleep",
                 description: "ZZZzzzz",
-                dueDate: moment().add(1, "days").format("YYYY-M-D"),
+                dueDate: moment().add(1, "days").format("YYYY-MM-DD"),
                 priority: "highest", 
                 complete: false,
                 completedOn: moment("3000-12-25")
             }
-        ]
+        ],
+        newProjectScreen: true
     }, 
     {
         name: "School",
